@@ -34,4 +34,3 @@ window.addEventListener("load", async()=>{
     document.getElementById("play").addEventListener("mousedown", handlePlay);
     document.getElementById("play").addEventListener("mouseup", handleStop);
 })
-

@@ -6661,6 +6661,6 @@ run();
 
 // end include: postamble.js
 
-// include: /home/christiangrothe/Music/JUCE_Projects/Capture_WASM/em-es6-module.js
-export default Module;// end include: /home/christiangrothe/Music/JUCE_Projects/Capture_WASM/em-es6-module.js
+// include: /home/christiangrothe/Music/Capture/capture_core/em-es6-module.js
+export default Module;// end include: /home/christiangrothe/Music/Capture/capture_core/em-es6-module.js
 

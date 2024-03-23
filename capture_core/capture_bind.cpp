@@ -1,5 +1,5 @@
 #include <emscripten/bind.h>
-#include "./Synth.h"
+#include "./src/Synth.h"
 #include <iostream>
 
 using namespace emscripten;
@@ -18,7 +18,7 @@ public:
     }
 };
 
-EMSCRIPTEN_BINDINGS(synth)
+EMSCRIPTEN_BINDINGS(CAPTURE_CLASS)
 {
     class_<SynthWrapper, base<Synth>>("Synth")
         .constructor()

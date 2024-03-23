@@ -2,7 +2,7 @@ import Module from "./capture.wasm.js"
 import HeapAudioBuffer from "./AudioHeap.js"
 
 const NUM_FRAMES = 128;
-class CaptureProcessor extends AudioWorkletProcessor {
+export class CaptureProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
     this._synth = new Module.Synth();    
