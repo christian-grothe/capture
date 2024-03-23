@@ -7,7 +7,7 @@ using namespace emscripten;
 class SynthWrapper : public Synth
 {
 public:
-    void render(uintptr_t outputPtr, uintptr_t inputPtr, int32_t numFrames)
+    void render(uintptr_t inputPtr, uintptr_t outputPtr, int32_t numFrames)
     {
         float *outputFloat = reinterpret_cast<float *>(outputPtr);
         float **outputs;

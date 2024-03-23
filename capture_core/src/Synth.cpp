@@ -136,7 +136,6 @@ void Synth::setModulationFreq(uint8_t index, float newFreq)
 }
 void Synth::record()
 {
-  std::cout << "RECORDING" << std::endl;
   isRecording = true;
 }
 
@@ -160,7 +159,6 @@ void Synth::render(const float *readPtr, float **writePtrs, int numSamples)
       {
         writePos = 0;
         isRecording = false;
-        std::cout << "END RECORDING" << std::endl;
       }
     }
 
@@ -176,7 +174,7 @@ void Synth::render(const float *readPtr, float **writePtrs, int numSamples)
     }
 
     output *= 0.25;
-    output += delay.render(output);
+    //    output += delay.render(output);
 
     writePtrs[0][sample] += output.left;
     writePtrs[1][sample] += output.right;
@@ -185,13 +183,11 @@ void Synth::render(const float *readPtr, float **writePtrs, int numSamples)
 
 void Synth::init(int totalChannelNum, int bufferSize, float sampleRate_)
 {
-  std::cout << "INIT" << std::endl;
   loopBuffer.setSize(bufferSize);
   delay.setSize(sampleRate_ * 1, sampleRate_);
   writePos = 0.0f;
   playbackDir = PlaybackDir::Normal;
   grainDir = PlaybackDir::Normal;
-  std::cout << "bufferSize: " << loopBuffer.getNumSamples() << std::endl;
 
   for (int voice = 0; voice < VOICE_NUM; voice++)
   {
@@ -204,7 +200,6 @@ void Synth::init(int totalChannelNum, int bufferSize, float sampleRate_)
 
 void Synth::startPlaying(uint8_t midiNote)
 {
-  std::cout << "PLAY" << std::endl;
   for (int voice = 0; voice < VOICE_NUM; voice++)
   {
     if (!voices[voice].getIsPlaying())
@@ -216,7 +211,6 @@ void Synth::startPlaying(uint8_t midiNote)
 }
 void Synth::stopPlaying(uint8_t midiNote)
 {
-  std::cout << "STOP" << std::endl;
   for (int voice = 0; voice < VOICE_NUM; voice++)
   {
     if (voices[voice].note == midiNote)

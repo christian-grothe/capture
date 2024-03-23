@@ -26,7 +26,6 @@ public:
   void setRelease(float release);
   void setGrainTriggerRate(float rate);
   void init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *synth);
-  void render(float **writePtrs, int numSamples);
   Utils::Signal render();
 
   void startPlaying(int note_);

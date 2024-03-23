@@ -11,6 +11,7 @@
 #pragma once
 #include <math.h>
 #include <functional>
+#include <iostream>
 
 class Envelope
 {

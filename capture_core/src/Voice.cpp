@@ -57,10 +57,12 @@ void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *
   synth = synth_;
   loopBufferSize = bufferSize;
   sampleRate = sampleRate_;
-  grainTriggerRate = sampleRate * (500.f / 1000.0f);
+  grainTriggerRate = sampleRate * (50.0f / 1000.0f);
   grainTriggerInc = grainTriggerRate;
   isPlaying = false;
-  grainLength = 500.0f;
+  grainLength = 20.0f;
+  setAttack(0.01f);
+  setRelease(0.01f);
 
   playHead = 0.0f;
   playHeadInc = (1 / loopBufferSize);
