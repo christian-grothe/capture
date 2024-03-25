@@ -1,55 +1,60 @@
 import { create } from "zustand";
 
 interface UseAppStore {
-	number: number;
+	isInit: boolean;
 	audioCtx: AudioContext | undefined;
 	captureNode: AudioWorkletNode | undefined;
-	oscNode: OscillatorNode | undefined;
+	sourceNode: MediaStreamAudioSourceNode | undefined;
 	init: () => void;
 	record: () => void;
-	playNote: () => void;
-	stopNote: () => void;
+	playNote: (midiNote: number) => void;
+	stopNote: (midiNote: number) => void;
 }
 
 export const useAppStore = create<UseAppStore>((set, get) => {
 	return {
-		number: 10,
+		isInit: false,
 		audioCtx: undefined,
 		captureNode: undefined,
-		oscNode: undefined,
+		sourceNode: undefined,
 		init: async () => {
+			if (get().isInit) return;
 			const audioCtx = new AudioContext();
 			await audioCtx.audioWorklet.addModule("worklets/capture_processor.js");
-			const captureNode = new AudioWorkletNode(audioCtx, "capture");
-			const oscNode = audioCtx.createOscillator();
-			const gainNode = audioCtx.createGain();
-			gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-			oscNode.frequency.setValueAtTime(500, audioCtx.currentTime);
+			const captureNode = new AudioWorkletNode(audioCtx, "capture", {
+				numberOfInputs: 1,
+				outputChannelCount: [2],
+			});
 
-			oscNode.connect(gainNode);
-			gainNode.connect(captureNode);
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: true,
+				video: false,
+			});
+			const sourceNode = audioCtx.createMediaStreamSource(stream);
+
+			sourceNode.connect(captureNode);
 			captureNode.connect(audioCtx.destination);
 
-			oscNode.start();
 			audioCtx.resume();
-			set({ oscNode, audioCtx, captureNode });
+
+			set({ audioCtx, captureNode, isInit: true });
 		},
 		record: () => {
 			const captureNode = get().captureNode;
 			if (captureNode) {
-				captureNode.port.postMessage("rec");
+				captureNode.port.postMessage({ cmd: "rec" });
 			}
 		},
-		playNote: () => {
+		playNote: (midiNote: number) => {
 			const captureNode = get().captureNode;
 			if (captureNode) {
-				captureNode.port.postMessage("play");
+				captureNode.port.postMessage({ cmd: "play", val: midiNote });
 			}
 		},
-		stopNote: () => {
+		stopNote: (midiNote: number) => {
 			const captureNode = get().captureNode;
 			if (captureNode) {
-				captureNode.port.postMessage("stop");
+				captureNode.port.postMessage({ cmd: "stop", val: midiNote });
 			}
 		},
 	};

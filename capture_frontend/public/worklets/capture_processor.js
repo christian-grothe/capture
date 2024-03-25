@@ -6,46 +6,41 @@ export class CaptureProcessor extends AudioWorkletProcessor {
 	constructor() {
 		super();
 		this._synth = new Module.Synth();
-		this._wasmHeapBufferIn = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
-		this._wasmHeapBufferOut = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
-		this._synth.init(1, 5 * 48000, 48000);
+		this._heapInputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
+		this._heapOutputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 2, 2);
+		this._synth.init(2, 1 * 48000, 48000);
 		this.port.onmessage = this.handleMessage.bind(this);
 	}
 
 	process(inputs, outputs) {
-		const input = inputs[0];
+		const input = inputs[0][0];
 		const output = outputs[0];
+		const inputChannelCount = input.length;
+		const outputChannelCount = output.length;
 
-		const channelCount = input.length;
-
-		this._wasmHeapBufferIn.adaptChannel(channelCount);
-		this._wasmHeapBufferOut.adaptChannel(channelCount);
-
-		for (let channel = 0; channel < channelCount; ++channel) {
-			this._wasmHeapBufferIn.getChannelData(channel).set(input[channel]);
-		}
+		this._heapInputBuffer.getChannelData(0).set(input);
 
 		this._synth.render(
-			this._wasmHeapBufferIn.getHeapAddress(),
-			this._wasmHeapBufferOut.getHeapAddress(),
+			this._heapInputBuffer.getHeapAddress(),
+			this._heapOutputBuffer.getHeapAddress(),
 			NUM_FRAMES
 		);
 
-		for (let channel = 0; channel < channelCount; ++channel) {
-			output[channel].set(this._wasmHeapBufferOut.getChannelData(channel));
+		for (let channel = 0; channel < outputChannelCount; ++channel) {
+			output[channel].set(this._heapOutputBuffer.getChannelData(channel));
 		}
 	}
 
 	handleMessage(event) {
-		switch (event.data) {
+		switch (event.data.cmd) {
 			case "rec":
 				this._synth.record();
 				break;
 			case "play":
-				this._synth.startPlaying(60);
+				this._synth.startPlaying(event.data.val);
 				break;
 			case "stop":
-				this._synth.stopPlaying(60);
+				this._synth.stopPlaying(event.data.val);
 				break;
 			default:
 				break;

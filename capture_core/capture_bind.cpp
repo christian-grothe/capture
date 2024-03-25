@@ -11,10 +11,22 @@ public:
     {
         float *outputFloat = reinterpret_cast<float *>(outputPtr);
         float **outputs;
-        outputs[0] = outputFloat;
-        outputs[1] = outputFloat;
+
+        outputs[0] = outputFloat + 0 * numFrames;
+        outputs[1] = outputFloat + 1 * numFrames;
+
         float *inputFloat = reinterpret_cast<float *>(inputPtr);
         Synth::render(inputFloat, outputs, numFrames);
+    }
+    void startPlaying(int midiNote)
+    {
+        uint8_t midiNoteCasted = static_cast<uint8_t>(midiNote);
+        Synth::startPlaying(midiNoteCasted);
+    }
+    void stopPlaying(int midiNote)
+    {
+        uint8_t midiNoteCasted = static_cast<uint8_t>(midiNote);
+        Synth::stopPlaying(midiNoteCasted);
     }
 };
 
@@ -22,13 +34,13 @@ EMSCRIPTEN_BINDINGS(CAPTURE_CLASS)
 {
     class_<SynthWrapper, base<Synth>>("Synth")
         .constructor()
-        .function("render", &SynthWrapper::render, allow_raw_pointers());
+        .function("render", &SynthWrapper::render, allow_raw_pointers())
+        .function("startPlaying", &SynthWrapper::startPlaying)
+        .function("stopPlaying", &SynthWrapper::stopPlaying);
 
     class_<Synth>("SynthBase")
         .constructor<>()
         .function("init", &Synth::init)
         .function("record", &Synth::record)
-        .function("startPlaying", &Synth::startPlaying)
-        .function("stopPlaying", &Synth::stopPlaying)
         .function("settAttack", &Synth::setAttack);
 };

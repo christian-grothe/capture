@@ -60,7 +60,7 @@ void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *
   grainTriggerRate = sampleRate * (50.0f / 1000.0f);
   grainTriggerInc = grainTriggerRate;
   isPlaying = false;
-  grainLength = 20.0f;
+  grainLength = 100.0f;
   setAttack(0.01f);
   setRelease(0.01f);
 
@@ -70,7 +70,7 @@ void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *
 
   pitch = 1.0f;
   sprayFactor = 0.0f;
-  spreadFactor = 0.0f;
+  spreadFactor = 1.0f;
 
   loopStart = 0.0f;
   loopLength = 1.0f;
