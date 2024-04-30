@@ -1,7 +1,7 @@
 import './App.css'
 import { Keyboard } from './components/keyboard/Keyboard';
-import Poti from './components/poti/Poti'
 import { useAppStore } from './store/useAppStore'
+import Poti from './components/controllers/Poti/Poti'
 
 function App() {
   const init = useAppStore((state) => state.init);
@@ -10,9 +10,12 @@ function App() {
   return (
     <>
       <h1>CAPTURE</h1>
-      <button onClick={init}>INIT</button>
-      <button onClick={record}>REC</button>
-      <Poti />
+      <div>
+        <button onClick={init}>Init</button>
+        <button onClick={record}>Record</button>
+      </div>
+      <Poti label={"test"} />
+      <Poti label={"test"} />
       <Keyboard />
     </>
   )

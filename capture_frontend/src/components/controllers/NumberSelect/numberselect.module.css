@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.wrapper button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color:var(--white);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.controls span{
+  position: absolute;
+}

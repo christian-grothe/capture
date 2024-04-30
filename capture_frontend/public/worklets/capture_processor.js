@@ -15,7 +15,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
 	process(inputs, outputs) {
 		const input = inputs[0][0];
 		const output = outputs[0];
-		const inputChannelCount = input.length;
 		const outputChannelCount = output.length;
 
 		this._heapInputBuffer.getChannelData(0).set(input);

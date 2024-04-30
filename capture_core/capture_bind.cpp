@@ -1,6 +1,5 @@
 #include <emscripten/bind.h>
 #include "./src/Synth.h"
-#include <iostream>
 
 using namespace emscripten;
 
@@ -30,6 +29,7 @@ public:
     }
 };
 
+
 EMSCRIPTEN_BINDINGS(CAPTURE_CLASS)
 {
     class_<SynthWrapper, base<Synth>>("Synth")
@@ -37,10 +37,11 @@ EMSCRIPTEN_BINDINGS(CAPTURE_CLASS)
         .function("render", &SynthWrapper::render, allow_raw_pointers())
         .function("startPlaying", &SynthWrapper::startPlaying)
         .function("stopPlaying", &SynthWrapper::stopPlaying);
+        .function("getBuffer", &SynthWrapper::getBuffer, allow_raw_pointers());
 
     class_<Synth>("SynthBase")
         .constructor<>()
         .function("init", &Synth::init)
         .function("record", &Synth::record)
-        .function("settAttack", &Synth::setAttack);
+        .function("setAttack", &Synth::setAttack);
 };
