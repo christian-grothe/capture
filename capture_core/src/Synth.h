@@ -67,12 +67,12 @@ public:
   ModulationMixer modMixer;
 
   // Modulation
-  float grainLengthModDepth{0.0f};
-  float grainDenseModDepth{0.0f};
-  float playSpeedModDepth{0.0f};
-  float delayTimeModDepth{0.0f};
-  float delayLazynessModDepth{0.0f};
-  float delayInputModDepth{0.0f};
+  float grainLengthModDepth{1.0f};
+  float grainDenseModDepth{1.0f};
+  float playSpeedModDepth{1.0f};
+  float delayTimeModDepth{1.0f};
+  float delayLazynessModDepth{1.0f};
+  float delayInputModDepth{1.0f};
 
   uint8_t grainDenseModIndex{0};
   uint8_t grainLengthModIndex{1};

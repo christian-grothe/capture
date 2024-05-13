@@ -7,10 +7,11 @@ interface Props {
   label: string;
   min?: number;
   max?: number;
+  initVal?: number;
 }
 
-const NumberSelect = ({ callback, label, min, max }: Props) => {
-  const [value, setValue] = useState(0);
+const NumberSelect = ({ callback, label, min, max, initVal }: Props) => {
+  const [value, setValue] = useState(initVal || 0);
 
   const handleClick = (operation: "inc" | "dec") => {
     if (

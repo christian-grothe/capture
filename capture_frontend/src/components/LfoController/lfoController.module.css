@@ -1,0 +1,13 @@
+.wrapper {
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.controlls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}

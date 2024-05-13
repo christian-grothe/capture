@@ -29,17 +29,17 @@ void Synth::setRelease(float release) {
 }
 void Synth::setGrainLength(float grainLength) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].grainLength = grainLength;
+    voices[voice].grainLength = grainLength * 1000.0f;
   }
 }
 void Synth::setDensity(float rate) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].setGrainTriggerRate(rate);
+    voices[voice].setGrainTriggerRate(rate * 1000.0f);
   }
 }
 void Synth::setPlaySpeed(float playSpeed) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].setPlaySpeed(playSpeed);
+    voices[voice].setPlaySpeed(playSpeed * 4.0f);
   }
 }
 void Synth::setSpray(float sprayfactor) {
@@ -56,13 +56,13 @@ void Synth::setSpread(float spreadFactor) {
 
 void Synth::setLoopStart(float loopStart) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].loopStart = loopStart;
+    voices[voice].loopStart = loopStart * 100.0f;
   }
 }
 
 void Synth::setLoopLength(float loopLength) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].loopLength = loopLength;
+    voices[voice].loopLength = loopLength * 100.0f;
   }
 }
 
@@ -132,7 +132,7 @@ void Synth::render(const float *readPtr, float **writePtrs, int numSamples) {
     }
 
     output *= 0.25;
-    //    output += delay.render(output);
+    output += delay.render(output);
 
     writePtrs[0][sample] += output.left;
     writePtrs[1][sample] += output.right;

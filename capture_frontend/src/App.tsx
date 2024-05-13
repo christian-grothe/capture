@@ -1,24 +1,26 @@
-import './App.css'
-import { Keyboard } from './components/keyboard/Keyboard';
-import { useAppStore } from './store/useAppStore'
-import Poti from './components/controllers/Poti/Poti'
+import "./App.css";
+import { Keyboard } from "./components/Keyboard/Keyboard";
+import ControllSection from "./components/ControllSection/ControllSection";
+import { delay, granular } from "./components/ControllSection/controllers";
+import LfoController from "./components/LfoController/LfoController";
+import Waveform from "./components/Waveform/Waveform";
 
 function App() {
-  const init = useAppStore((state) => state.init);
-  const record = useAppStore((state) => state.record);
-
   return (
-    <>
-      <h1>CAPTURE</h1>
-      <div>
-        <button onClick={init}>Init</button>
-        <button onClick={record}>Record</button>
+    <div className="app">
+      <div className="section gap">
+        <LfoController/>
+        <Waveform/>
       </div>
-      <Poti label={"test"} />
-      <Poti label={"test"} />
-      <Keyboard />
-    </>
-  )
+      <div className="section gap">
+        <div className="flex-column gap">
+          <ControllSection label="Delay" controllers={delay} />
+          <ControllSection label="Grain" controllers={granular} />
+        </div>
+        <Keyboard />
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

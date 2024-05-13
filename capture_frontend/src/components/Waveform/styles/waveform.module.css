@@ -1,0 +1,48 @@
+.wrapper {
+  border: 1px solid var(--white);
+  border-radius: 20px;
+  height: 100%;
+  padding: 20px;
+}
+
+.canvasContainer {
+  position: relative;
+  width: 100%;
+  height: 125px;
+  background-color: rgb(51, 51, 51);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.wrapper canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.record {
+  background-color: var(--background-light);
+  border-bottom-right-radius: 10px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 60px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.record button {
+  background-color: var(--fill);
+  color: white;
+  border: none;
+  border-radius: 100%;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+}

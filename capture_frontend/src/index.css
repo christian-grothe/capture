@@ -14,6 +14,7 @@
   --fill: #ffa0aa;
   --white: #ffebeb;
   --background: #242424;
+  --background-light: #2f2f2f;
 }
 
 a {
@@ -29,7 +30,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  min-width: 100vw;
   min-height: 100vh;
 }
 

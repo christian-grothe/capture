@@ -13,7 +13,7 @@
   margin: 5px;
   width: 55px;
   height: 100px;
-  border: 3px solid ;
+  border: 3px solid;
   border-radius: 20px;
   cursor: pointer;
   background-color: #242424;
@@ -38,7 +38,10 @@
 
 .toolbar {
   display: flex;
-  font-size: 1.3rem;
-  gap: 10px;
+  justify-content: space-between;
 }
 
+.toolbar div{
+  display:flex;
+  gap:10px;
+}

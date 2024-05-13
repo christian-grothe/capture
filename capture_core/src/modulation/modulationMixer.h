@@ -10,6 +10,7 @@
 
 #pragma once
 #include "modulator.h"
+#include <iostream>
 
 class ModulationMixer
 {
@@ -34,26 +35,6 @@ public:
     mods[1].setFreq(0.5f);
     mods[2].setFreq(0.20f);
     mods[3].setFreq(1.5f);
-
-    setMixDepth(0, 0, 0.5f);
-    setMixDepth(0, 1, 0.5f);
-    setMixDepth(0, 2, 0.8f);
-    setMixDepth(0, 3, 0.0f);
-
-    setMixDepth(1, 0, 0.0f);
-    setMixDepth(1, 1, 0.0f);
-    setMixDepth(1, 2, 0.0f);
-    setMixDepth(1, 3, 1.0f);
-
-    setMixDepth(2, 0, 1.0f);
-    setMixDepth(2, 1, 0.0f);
-    setMixDepth(2, 2, 0.0f);
-    setMixDepth(2, 3, 0.0f);
-
-    setMixDepth(3, 0, 0.5f);
-    setMixDepth(3, 1, 0.0f);
-    setMixDepth(3, 2, 0.5f);
-    setMixDepth(3, 3, 0.0f);
   }
 
   void update()

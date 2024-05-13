@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Key } from "./Key";
 import { Space } from "./Space";
 import styles from "./keyboard.module.css";
-import NumberSelect from "../controllers/NumberSelect/NumberSelect";
-import Toggle from "../controllers/Toggle/Toggle";
+import NumberSelect from "../Controllers/NumberSelect/NumberSelect";
+import Toggle from "../Controllers/Toggle/Toggle";
+import Poti from "../Controllers/Poti/Poti";
 
 export const Keyboard = () => {
   const [baseNote, setBaseNote] = useState(60);
@@ -18,13 +19,24 @@ export const Keyboard = () => {
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={"container"}>
       <div className={styles.toolbar}>
-        <NumberSelect callback={changeOctave} label={"Oct"} min={-3} max={3} />
-        <Toggle
-          label={"Latch"}
-          callback={(state: boolean) => setIsLatch(state)}
-        />
+        <div>
+          <NumberSelect
+            callback={changeOctave}
+            label={"Oct"}
+            min={-3}
+            max={3}
+          />
+          <Toggle
+            label={"Latch"}
+            callback={(state: boolean) => setIsLatch(state)}
+          />
+        </div>
+        <div>
+          <Poti label={"Attack"} cmd={"setAttack"} />
+          <Poti label={"Release"} cmd={"setRelease"} />
+        </div>
       </div>
       <div className={`${styles.keyboard} ${styles.blackRow}`}>
         <Key midiNote={baseNote + 1} isLatch={isLatch} />

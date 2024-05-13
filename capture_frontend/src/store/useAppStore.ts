@@ -1,25 +1,29 @@
 import { create } from "zustand";
+import { Commands, ModCommands } from "../types/types";
 
 interface UseAppStore {
-  isInit: boolean;
   audioCtx: AudioContext | undefined;
   captureNode: AudioWorkletNode | undefined;
   sourceNode: MediaStreamAudioSourceNode | undefined;
+  audioBufferSize: number;
+  bufferToDraw: Array<number>;
   init: () => void;
-  record: () => void;
-  playNote: (midiNote: number) => void;
-  stopNote: (midiNote: number) => void;
+  sendMessage: (cmd: Commands | ModCommands, val?: any) => void;
 }
 
 export const useAppStore = create<UseAppStore>((set, get) => {
   return {
-    isInit: false,
     audioCtx: undefined,
     captureNode: undefined,
     sourceNode: undefined,
+    bufferToDraw: [],
+    audioBufferSize: 0,
     init: async () => {
-      if (get().isInit) return;
+      if (get().audioCtx) return;
+      console.log("init");
       const audioCtx = new AudioContext();
+      set({ audioCtx });
+
       await audioCtx.audioWorklet.addModule("worklets/capture_processor.js");
       const captureNode = new AudioWorkletNode(audioCtx, "capture", {
         numberOfInputs: 1,
@@ -37,24 +41,14 @@ export const useAppStore = create<UseAppStore>((set, get) => {
 
       audioCtx.resume();
 
-      set({ audioCtx, captureNode, isInit: true });
+      set({ captureNode, sourceNode });
     },
-    record: () => {
+    sendMessage: (cmd: Commands | ModCommands, val?: any) => {
       const captureNode = get().captureNode;
-      if (captureNode) {
-        captureNode.port.postMessage({ cmd: "rec" });
-      }
-    },
-    playNote: (midiNote: number) => {
-      const captureNode = get().captureNode;
-      if (captureNode) {
-        captureNode.port.postMessage({ cmd: "play", val: midiNote });
-      }
-    },
-    stopNote: (midiNote: number) => {
-      const captureNode = get().captureNode;
-      if (captureNode) {
-        captureNode.port.postMessage({ cmd: "stop", val: midiNote });
+      if (!captureNode) {
+        get().init();
+      } else {
+        captureNode.port.postMessage({ cmd, val });
       }
     },
   };
