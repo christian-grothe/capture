@@ -20,7 +20,7 @@ const Poti = ({ label, cmd, min, max, modCmd, modIdCmd }: Props) => {
   const [isActive, setIsActive] = useState(false);
   const [val, setVal] = useState(min || 0);
   const startRef = useRef(0);
-  const currentPos = useRef(0);
+  const currentVal = useRef(0);
   const prevY = useRef(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,28 +36,22 @@ const Poti = ({ label, cmd, min, max, modCmd, modIdCmd }: Props) => {
       const y = startRef.current - e.clientY;
 
       if (y > prevY.current) {
-        currentPos.current += 4;
+        currentVal.current += 0.01;
       } else {
-        currentPos.current -= 4;
+        currentVal.current -= 0.01;
       }
 
+      currentVal.current = Math.min(Math.max(currentVal.current, 0), 1);
       prevY.current = y;
 
-      const currentVal = (currentPos.current + 45) / 265;
-      const bounds = { min: min || 0, max: max || 1 };
-      if (currentVal < bounds.min) {
-        setVal(bounds.min);
-        sendMessage(cmd, bounds.min);
-        return;
-      } else if (currentVal > bounds.max) {
-        setVal(bounds.max);
-        sendMessage(cmd, bounds.max);
-        return;
+      if (min && max) {
+        setVal(currentVal.current * (max - min) + min);
+      } else {
+        setVal(currentVal.current);
       }
-      setVal(currentVal);
       sendMessage(cmd, currentVal);
-
-      containerRef.current.style.transform = `rotate(${currentPos.current}deg)`;
+      const rotation = currentVal.current * 245 - 45;
+      containerRef.current.style.transform = `rotate(${rotation}deg)`;
     };
 
     const handleMouseUp = () => {

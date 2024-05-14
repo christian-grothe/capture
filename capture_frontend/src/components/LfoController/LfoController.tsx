@@ -49,15 +49,15 @@ const LfoController = () => {
           <Fader index={0} setMixVal={setMix} initVal={mixes[currentMix][0]} />
         </div>
         <div>
-          <Poti cmd="lfo2Rate" label="B" />
+          <Poti cmd="lfo2Rate" label="B"  min={0.5} max={10} />
           <Fader index={1} setMixVal={setMix} initVal={mixes[currentMix][1]} />
         </div>
         <div>
-          <Poti cmd="lfo3Rate" label="C" />
+          <Poti cmd="lfo3Rate" label="C"  min={0.5} max={10} />
           <Fader index={2} setMixVal={setMix} initVal={mixes[currentMix][2]} />
         </div>
         <div>
-          <Poti cmd="lfo4Rate" label="D" />
+          <Poti cmd="lfo4Rate" label="D"  min={0.5} max={10} />
           <Fader index={3} setMixVal={setMix} initVal={mixes[currentMix][3]} />
         </div>
       </div>
