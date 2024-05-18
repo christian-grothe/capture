@@ -1,16 +1,6 @@
-/*
-  ==============================================================================
-
-    Voice.h
-    Created: 6 Jan 2024 9:41:06pm
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
-
 #pragma once
-#include "Grain.h"
 #include "Envelope.h"
+#include "Grain.h"
 #include "Utils.h"
 #include "modulation/modulationMixer.h"
 #include "modulation/noise.h"
@@ -18,14 +8,14 @@
 class Synth;
 class AudioBuffer;
 
-class Voice
-{
+class Voice {
 public:
   void setPlaySpeed(float playSpeed_);
   void setAttack(float attack);
   void setRelease(float release);
   void setGrainTriggerRate(float rate);
-  void init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *synth);
+  void init(int totalChannelNum, int bufferSize, float sampleRate_,
+            Synth *synth);
   Utils::Signal render();
 
   void startPlaying(int note_);
@@ -41,8 +31,7 @@ public:
   float loopStart;
   float loopLength;
   const int maxGrainLength{1000};
-  enum MidiCommands
-  {
+  enum MidiCommands {
     NoteOn = 144,
     NoteOff = 128,
     CC = 176,

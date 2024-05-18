@@ -1,33 +1,16 @@
-/*
-  ==============================================================================
-
-    modulator.h
-    Created: 2 Mar 2024 9:36:21pm
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
-
 #pragma once
-#include <cstdint>
-#include "sine.h"
 #include "noise.h"
 #include "saw.h"
+#include "sine.h"
 #include "square.h"
+#include <cstdint>
+#include <iostream>
 
-class Modulator
-{
+class Modulator {
 public:
-  enum class ModulationType
-  {
-    Sine,
-    Saw,
-    Noise,
-    Square
-  };
+  enum class ModulationType { Sine, Saw, Noise, Square };
 
-  void init(int sampleRate_)
-  {
+  void init(int sampleRate_) {
     modulationType = ModulationType::Sine;
     sampleRate = sampleRate_;
     float inc = (1.0f / sampleRate) * 0.5;
@@ -37,24 +20,19 @@ public:
     sine.setInc(inc);
   }
 
-  void setFreq(float freq)
-  {
+  void setFreq(float freq) {
     float inc = (1.0f / sampleRate) * freq;
     saw.setInc(inc);
     noise.setInc(inc);
     square.setInc(inc);
+    sine.setInc(inc);
   }
 
-  void setModulationType(ModulationType newType)
-  {
-    modulationType = newType;
-  }
+  void setModulationType(ModulationType newType) { modulationType = newType; }
 
-  void nextSample()
-  {
+  void nextSample() {
     float nextSample = 0.0f;
-    switch (modulationType)
-    {
+    switch (modulationType) {
     case ModulationType::Sine:
       nextSample = (sine.nextSample() + 1.0f) * 0.5f;
       break;
@@ -74,11 +52,7 @@ public:
     currentSample = nextSample;
   }
 
-  float getCurrentSample(float depth)
-  {
-    return (currentSample * depth) + 1.0f;
-  }
-
+  float getCurrentSample(float depth) { return (currentSample * depth) + 1.0f; }
   float currentSample;
 
 private:

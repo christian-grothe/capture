@@ -1,38 +1,19 @@
-/*
-  ==============================================================================
-
-    Voice.cpp
-    Created: 12 Jan 2024 7:39:58am
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
 #include "Voice.h"
 #include "Synth.h"
-#include "AudioBuffer.h"
 
-void Voice::setPlaySpeed(float playSpeed)
-{
+void Voice::setPlaySpeed(float playSpeed) {
   playHeadInc = (1 / loopBufferSize) * playSpeed;
 }
 
-void Voice::setAttack(float attack)
-{
-  env.setAttackMultiplier(attack);
-}
+void Voice::setAttack(float attack) { env.setAttackMultiplier(attack); }
 
-void Voice::setRelease(float release)
-{
-  env.setReleaseMultiploer(release);
-}
+void Voice::setRelease(float release) { env.setReleaseMultiploer(release); }
 
-void Voice::setGrainTriggerRate(float rate)
-{
+void Voice::setGrainTriggerRate(float rate) {
   grainTriggerRate = sampleRate * (rate / 1000.0f);
 }
 
-void Voice::startPlaying(int note_)
-{
+void Voice::startPlaying(int note_) {
   note = note_;
   int semitoneDifference = note - 60;
   float newPitch = pow(2.0f, static_cast<float>(semitoneDifference) / 12.0f);
@@ -41,19 +22,15 @@ void Voice::startPlaying(int note_)
   env.attack();
 }
 
-void Voice::stopPlaying()
-{
+void Voice::stopPlaying() {
   note = -1;
   env.release();
 }
 
-bool Voice::getIsPlaying()
-{
-  return isPlaying;
-}
+bool Voice::getIsPlaying() { return isPlaying; }
 
-void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *synth_)
-{
+void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_,
+                 Synth *synth_) {
   synth = synth_;
   loopBufferSize = bufferSize;
   sampleRate = sampleRate_;
@@ -75,30 +52,28 @@ void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_, Synth *
   loopStart = 0.0f;
   loopLength = 1.0f;
 
-  env.init(sampleRate, 0.1f, [this]()
-           { 
-            isPlaying = false;
-            note = -1; });
+  env.init(sampleRate, 0.1f, [this]() {
+    isPlaying = false;
+    note = -1;
+  });
 
-  for (int grain = 0; grain < GRAIN_NUMS; grain++)
-  {
+  for (int grain = 0; grain < GRAIN_NUMS; grain++) {
     grains[grain].init(&synth->loopBuffer, sampleRate);
   }
 }
 
-Utils::Signal Voice::render()
-{
+Utils::Signal Voice::render() {
   setPlayHead();
   activateGrain();
   return getGrainVals();
 }
 
-inline void Voice::setPlayHead()
-{
-  float playSpeedModInc = synth->modMixer.getModulationIncrement(synth->playSpeedModIndex, synth->playSpeedModDepth, playHeadInc, (1 / loopBufferSize) * 4);
+inline void Voice::setPlayHead() {
+  float playSpeedModInc = synth->modMixer.getModulationIncrement(
+      synth->playSpeedModIndex, synth->playSpeedModDepth, playHeadInc,
+      (1 / loopBufferSize) * 4);
   float playHeadNew;
-  switch (synth->playbackDir)
-  {
+  switch (synth->playbackDir) {
   case Synth::PlaybackDir::Normal:
     playHeadNew = playHead + playHeadInc + playSpeedModInc;
     playHead = (playHeadNew >= 1.0f) || (playHeadNew >= loopStart + loopLength)
@@ -108,9 +83,7 @@ inline void Voice::setPlayHead()
 
   case Synth::PlaybackDir::Reverse:
     playHeadNew = playHead - (playHeadInc + playSpeedModInc);
-    playHead = playHeadNew <= loopStart
-                   ? loopStart + loopLength
-                   : playHeadNew;
+    playHead = playHeadNew <= loopStart ? loopStart + loopLength : playHeadNew;
     break;
 
   case Synth::PlaybackDir::BackAndForth:
@@ -119,23 +92,26 @@ inline void Voice::setPlayHead()
   }
 }
 
-void Voice::activateGrain()
-{
-  float grainDensModInc = synth->modMixer.getModulationIncrement(synth->grainDenseModIndex, synth->grainDenseModDepth, grainTriggerRate, sampleRate);
-  float grainLengthModInc = synth->modMixer.getModulationIncrement(synth->grainLengthModIndex, synth->grainLengthModDepth, grainLength, maxGrainLength);
+void Voice::activateGrain() {
+  float grainDensModInc = synth->modMixer.getModulationIncrement(
+      synth->grainDenseModIndex, synth->grainDenseModDepth, grainTriggerRate,
+      sampleRate);
+  float grainLengthModInc = synth->modMixer.getModulationIncrement(
+      synth->grainLengthModIndex, synth->grainLengthModDepth, grainLength,
+      maxGrainLength);
 
-  if (grainTriggerInc++ >= grainTriggerRate + grainDensModInc)
-  {
+  if (grainTriggerInc++ >= grainTriggerRate + grainDensModInc) {
     float spray = random.nextSample() * sprayFactor;
-    for (int grain = 0; grain < GRAIN_NUMS; grain++)
-    {
-      if (!grains[grain].isActive())
-      {
+    for (int grain = 0; grain < GRAIN_NUMS; grain++) {
+      if (!grains[grain].isActive()) {
         playHead = playHead < loopStart ? loopStart : playHead;
-        float withSpray = (playHead + spray > 1.0f) ? playHead : playHead + spray;
+        float withSpray =
+            (playHead + spray > 1.0f) ? playHead : playHead + spray;
         float pos = (random.nextSample() - 0.5f) * 2 * spreadFactor;
-        bool isReverse = synth->grainDir == Synth::PlaybackDir::Normal ? false : true;
-        grains[grain].activateGrain(withSpray, grainLength + grainLengthModInc, pos, pitch, isReverse);
+        bool isReverse =
+            synth->grainDir == Synth::PlaybackDir::Normal ? false : true;
+        grains[grain].activateGrain(withSpray, grainLength + grainLengthModInc,
+                                    pos, pitch, isReverse);
         break;
       }
     }
@@ -144,14 +120,11 @@ void Voice::activateGrain()
   }
 }
 
-Utils::Signal Voice::getGrainVals()
-{
+Utils::Signal Voice::getGrainVals() {
   Utils::Signal output;
   float envVal = env.nextValue();
-  for (int grain = 0; grain < GRAIN_NUMS; grain++)
-  {
-    if (grains[grain].isActive())
-    {
+  for (int grain = 0; grain < GRAIN_NUMS; grain++) {
+    if (grains[grain].isActive()) {
       Utils::Signal newOutput = grains[grain].getValues();
       output.left += newOutput.left * envVal;
       output.right += newOutput.right * envVal;

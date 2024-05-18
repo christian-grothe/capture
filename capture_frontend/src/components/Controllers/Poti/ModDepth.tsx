@@ -16,8 +16,8 @@ const ModDepth = ({ modCmd }: Props) => {
   const handleMouseMove = (ev: MouseEvent) => {
     if (!isActive || !wrapperRef.current || !barRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    const y = (ev.clientY - rect.top) / wrapperRef.current.clientHeight;
-    if (y > 1 || y < 0) return;
+    let y = (ev.clientY - rect.top) / wrapperRef.current.clientHeight;
+    y = Math.min(Math.max(y, 0), 1);
     barRef.current.style.top = `${y * 100}%`;
     sendMessage(modCmd, 1 - y);
   };

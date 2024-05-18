@@ -1,21 +1,9 @@
-/*
-  ==============================================================================
-
-    noise.h
-    Created: 2 Mar 2024 9:32:24pm
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
-
 #pragma once
 #include "saw.h"
 
-class Noise
-{
+class Noise {
 public:
-  float nextSample()
-  {
+  float nextSample() {
     noiseSeed = noiseSeed * 196314165 + 907633515;
     float temp = int(noiseSeed >> 7) - 16777216;
     temp = temp / 16777215.0f;
@@ -27,20 +15,14 @@ private:
   unsigned int noiseSeed{22222};
 };
 
-class SampleAndHold
-{
+class SampleAndHold {
 public:
-  void setInc(float inc_)
-  {
-    inc = inc_;
-  }
+  void setInc(float inc_) { inc = inc_; }
 
-  float nextSample()
-  {
+  float nextSample() {
 
     phase += inc;
-    if (phase > 1.0f)
-    {
+    if (phase > 1.0f) {
       phase = 0.0f;
       currentSample = noise.nextSample();
     }

@@ -47,9 +47,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
             val: average,
             index: this.currentIndex,
           });
-          // this.port.postMessage({
-          //   val: this.bufferToDraw,
-          // });
         }
       }
     } else {
@@ -117,24 +114,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
           event.data.val.depth,
         );
         break;
-      case "getAudioData":
-        this.port.postMessage({
-          cmd: "audioData",
-          val: this.bufferToDraw,
-        });
-        break;
-      case "getBufferSize":
-        this.port.postMessage({
-          cmd: "bufferSize",
-          val: this._synth.getBufferSize(),
-        });
-        break;
-      case "getBufferPtr":
-        this.port.postMessage({
-          cmd: "bufferPtr",
-          val: this._synth.getBufferPtr(),
-        });
-        break;
       case "grainLengthModDepth":
       case "grainDenseModDepth":
       case "playSpeedModDepth":
@@ -148,6 +127,12 @@ export class CaptureProcessor extends AudioWorkletProcessor {
       case "delayLazynessModIndex":
       case "delayInputModIndex":
         this._synth[event.data.cmd] = event.data.val;
+        break;
+      case "lfoRate":
+        this._synth.setModFreq(event.data.val.index, event.data.val.val);
+        break;
+      case "setWaveform":
+        this._synth.setModType(event.data.val.index, event.data.val.waveform);
         break;
       default:
         console.log(event.data);

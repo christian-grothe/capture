@@ -45,19 +45,59 @@ const LfoController = () => {
       <span>LFO Mixer</span>
       <div className={styles.controlls}>
         <div>
-          <Poti cmd="lfo1Rate" label="A" min={0.5} max={10} />
+          <Poti
+            label="A"
+            unit="Hz"
+            min={0.05}
+            max={10}
+            waveformSelect={true}
+            index={0}
+            callback={(val: number) => {
+              sendMessage("lfoRate", { index: 0, val });
+            }}
+          />
           <Fader index={0} setMixVal={setMix} initVal={mixes[currentMix][0]} />
         </div>
         <div>
-          <Poti cmd="lfo2Rate" label="B"  min={0.5} max={10} />
+          <Poti
+            label="B"
+            unit="Hz"
+            min={0.05}
+            max={10}
+            waveformSelect
+            index={1}
+            callback={(val: number) => {
+              sendMessage("lfoRate", { index: 1, val });
+            }}
+          />
           <Fader index={1} setMixVal={setMix} initVal={mixes[currentMix][1]} />
         </div>
         <div>
-          <Poti cmd="lfo3Rate" label="C"  min={0.5} max={10} />
+          <Poti
+            label="C"
+            unit="Hz"
+            min={0.05}
+            max={10}
+            waveformSelect
+            index={2}
+            callback={(val: number) => {
+              sendMessage("lfoRate", { index: 2, val });
+            }}
+          />
           <Fader index={2} setMixVal={setMix} initVal={mixes[currentMix][2]} />
         </div>
         <div>
-          <Poti cmd="lfo4Rate" label="D"  min={0.5} max={10} />
+          <Poti
+            label="D"
+            unit="Hz"
+            min={0.05}
+            max={10}
+            waveformSelect
+            index={3}
+            callback={(val: number) => {
+              sendMessage("lfoRate", { index: 3, val });
+            }}
+          />
           <Fader index={3} setMixVal={setMix} initVal={mixes[currentMix][3]} />
         </div>
       </div>

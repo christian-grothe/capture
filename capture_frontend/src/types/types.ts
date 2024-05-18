@@ -14,12 +14,7 @@ type DelayCommands =
   | "setDelayInputGain"
   | "setDelayOutputGain";
 
-type LfoCommands =
-  | "lfo1Rate"
-  | "lfo2Rate"
-  | "lfo3Rate"
-  | "lfo4Rate"
-  | "setMixDepth";
+type LfoCommands = "lfoRate" | "setWaveform" | "setMixDepth";
 
 export type ModCommands =
   | "grainLengthModDepth"
@@ -33,7 +28,8 @@ export type ModCommands =
   | "playSpeedModIndex"
   | "delayTimeModIndex"
   | "delayLazynessModIndex"
-  | "delayInputModIndex";
+  | "delayInputModIndex"
+  | "setModFreq";
 
 export type Commands =
   | "setLoopStart"
@@ -53,5 +49,15 @@ export type Commands =
 export interface Controller {
   label: string;
   cmd: Commands;
+  min?: number;
+  max?: number;
   modCmd?: ModCommands;
+  modIdCmd?: ModCommands;
+}
+
+export enum Waveform {
+  Sine,
+  Saw,
+  Noise,
+  Square,
 }

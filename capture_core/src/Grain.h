@@ -1,37 +1,22 @@
-/*
-  ==============================================================================
-
-    GrainB.h
-    Created: 7 Jan 2024 8:14:20pm
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
-
 #pragma once
-#include <math.h>
-#include "modulation/grainEnv.h"
 #include "AudioBuffer.h"
 #include "Utils.h"
+#include "modulation/grainEnv.h"
+#include <math.h>
 
-class Grain
-{
+class Grain {
 public:
-  void init(AudioBuffer *loopBuffer_, float sampleRate_)
-  {
+  void init(AudioBuffer *loopBuffer_, float sampleRate_) {
     loopBuffer = loopBuffer_;
     sampleRate = sampleRate_;
   }
 
-  Utils::Signal getValues()
-  {
+  Utils::Signal getValues() {
     Utils::Signal output;
-    if (active)
-    {
+    if (active) {
       float envelope = grainEnv.nextSample();
       phasor += phasorInc;
-      if ((phasor >= 1.0f && !isReverse) || (phasor <= 0.0f && isReverse))
-      {
+      if ((phasor >= 1.0f && !isReverse) || (phasor <= 0.0f && isReverse)) {
         active = false;
         grainEnv.reset();
       }
@@ -47,16 +32,15 @@ public:
     return output;
   }
 
-  void setGrainLength(float grainLength_, float pitch_)
-  {
+  void setGrainLength(float grainLength_, float pitch_) {
     grainLength = sampleRate * (grainLength_ / 1000.0f);
     phasorInc = (1 / grainLength) * pitch_;
     grainEnv.inc = phasorInc;
     grainEnv.reset();
   }
 
-  void activateGrain(float playHead, float grainLength, float pos_ = 0.0f, float pitch = 1.0f, bool isReverse_ = false)
-  {
+  void activateGrain(float playHead, float grainLength, float pos_ = 0.0f,
+                     float pitch = 1.0f, bool isReverse_ = false) {
     active = true;
     pos = pos_;
     offset = playHead;
@@ -65,10 +49,7 @@ public:
     setGrainLength(grainLength, isReverse ? -pitch : pitch);
   }
 
-  bool isActive()
-  {
-    return active;
-  }
+  bool isActive() { return active; }
 
 private:
   AudioBuffer *loopBuffer;
@@ -83,10 +64,8 @@ private:
   bool active{false};
   bool isReverse;
 
-  float getNextSample()
-  {
-    if (!active)
-    {
+  float getNextSample() {
+    if (!active) {
       return 0.0f;
     }
 
@@ -97,7 +76,8 @@ private:
 
     float index = phasor * (grainLength - 1);
     index += sampleOffset;
-    auto sample = Utils::cubicHermiteSpline(loopBufferData, index, loopBufferLength);
+    auto sample =
+        Utils::cubicHermiteSpline(loopBufferData, index, loopBufferLength);
 
     return sample;
   }

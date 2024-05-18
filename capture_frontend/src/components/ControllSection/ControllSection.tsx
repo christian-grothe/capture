@@ -19,6 +19,8 @@ const ControllSection = ({ label, controllers }: Props) => {
             modCmd={controller.modCmd}
             modIdCmd={controller.modIdCmd}
             label={controller.label}
+            min={controller.min}
+            max={controller.max}
           />
         ))}
       </div>

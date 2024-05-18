@@ -1,2 +1,0 @@
-CompileFlags:
-  Add: [-I/home/christiangrothe/emsdk/upstream/emscripten/system/include]

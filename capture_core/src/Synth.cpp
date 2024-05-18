@@ -1,12 +1,3 @@
-/*
-  ==============================================================================
-
-    Synth.cpp
-    Created: 12 Jan 2024 9:21:13am
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
 #include "Synth.h"
 #include "Utils.h"
 #include <cstdint>
@@ -39,7 +30,7 @@ void Synth::setDensity(float rate) {
 }
 void Synth::setPlaySpeed(float playSpeed) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].setPlaySpeed(playSpeed * 4.0f);
+    voices[voice].setPlaySpeed(playSpeed);
   }
 }
 void Synth::setSpray(float sprayfactor) {

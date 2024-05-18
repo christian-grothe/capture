@@ -26,39 +26,31 @@ public:
     Synth::stopPlaying(midiNoteCasted);
   }
 
-  void setModFreq(int modIndex, float freq) {
-    Synth::modMixer.mods[modIndex].setFreq(freq);
+  void setModFreq(int modIndex, double freq) {
+    Synth::modMixer.setModFreq(modIndex, float(freq));
   }
 
   void setMixDepth(int mixIndex, int modIndex, float val) {
     Synth::modMixer.setMixDepth(mixIndex, modIndex, val);
   }
 
-  float getAudioData(int index) {
-    const float *bufferPtr = Synth::loopBuffer.getReadPtr();
-    return bufferPtr[index];
-  }
-
-  int getBufferSize() { return Synth::loopBuffer.getNumSamples(); }
-
-  val getBufferPtr() {
-    const float *bufferPtr = Synth::loopBuffer.getReadPtr();
-    return val(typed_memory_view(Synth::loopBuffer.getNumSamples(), bufferPtr));
+  void setModType(int modIndex, int newType) {
+    Modulator::ModulationType type =
+        static_cast<Modulator::ModulationType>(newType);
+    Synth::modMixer.mods[modIndex].setModulationType(type);
   }
 };
 
 EMSCRIPTEN_BINDINGS(CAPTURE_CLASS) {
-  register_vector<float>("VectorFloat");
   class_<SynthWrapper, base<Synth>>("Synth")
       .constructor()
       .function("render", &SynthWrapper::render, allow_raw_pointers())
       .function("startPlaying", &SynthWrapper::startPlaying)
       .function("stopPlaying", &SynthWrapper::stopPlaying)
-      .function("getAudioBuffer", &SynthWrapper::getAudioData)
-      .function("getBufferSize", &SynthWrapper::getBufferSize)
       .function("setModFreq", &SynthWrapper::setModFreq)
       .function("setMixDepth", &SynthWrapper::setMixDepth)
-      .function("getBufferPtr", &SynthWrapper::getBufferPtr);
+      .function("setModFreq", &SynthWrapper::setModFreq)
+      .function("setModType", &SynthWrapper::setModType);
 
   class_<Synth>("SynthBase")
       .constructor<>()

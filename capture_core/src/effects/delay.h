@@ -1,21 +1,10 @@
-/*
-  ==============================================================================
-
-    delay.h
-    Created: 8 Mar 2024 10:53:10am
-    Author:  christiangrothe
-
-  ==============================================================================
-*/
-
 #pragma once
-#include <vector>
 #include "../Utils.h"
+#include <vector>
 
 class Synth;
 
-class Delay
-{
+class Delay {
 public:
   void init(Synth *synth_);
 
@@ -43,9 +32,9 @@ private:
   float delaytime{0.5f};
   float targetDelaytime{0.5f};
 
-  float feedback{0.99f};
-  float inputGain{1.0f};
-  float outputGain{1.0f};
+  float feedback{0.5f};
+  float inputGain{0.0f};
+  float outputGain{0.0f};
 
   std::vector<float> bufferL;
   std::vector<float> bufferR;

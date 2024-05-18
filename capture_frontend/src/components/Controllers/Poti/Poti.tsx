@@ -4,17 +4,35 @@ import { useAppStore } from "../../../store/useAppStore";
 import { Commands, ModCommands } from "../../../types/types";
 import ModDepth from "./ModDepth";
 import ModIndex from "./ModIndex";
+import WaveformSelect from "./WaveformSelect";
 
 interface Props {
   label: string;
-  cmd: Commands;
+  unit?: string;
+  cmd?: Commands;
   min?: number;
   max?: number;
   modCmd?: ModCommands;
   modIdCmd?: ModCommands;
+  waveformSelect?: boolean;
+  index?: number;
+  callback?:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((val: number) => void);
 }
 
-const Poti = ({ label, cmd, min, max, modCmd, modIdCmd }: Props) => {
+const Poti = ({
+  label,
+  unit,
+  cmd,
+  min,
+  max,
+  modCmd,
+  modIdCmd,
+  waveformSelect,
+  index,
+  callback,
+}: Props) => {
   const sendMessage = useAppStore((state) => state.sendMessage);
 
   const [isActive, setIsActive] = useState(false);
@@ -35,21 +53,22 @@ const Poti = ({ label, cmd, min, max, modCmd, modIdCmd }: Props) => {
       if (!containerRef.current || !isActive) return;
       const y = startRef.current - e.clientY;
 
+      const inc = 0.015;
+
       if (y > prevY.current) {
-        currentVal.current += 0.01;
+        currentVal.current += inc;
       } else {
-        currentVal.current -= 0.01;
+        currentVal.current -= inc;
       }
 
       currentVal.current = Math.min(Math.max(currentVal.current, 0), 1);
       prevY.current = y;
 
-      if (min && max) {
+      if (min !== undefined && max !== undefined) {
         setVal(currentVal.current * (max - min) + min);
       } else {
         setVal(currentVal.current);
       }
-      sendMessage(cmd, currentVal);
       const rotation = currentVal.current * 245 - 45;
       containerRef.current.style.transform = `rotate(${rotation}deg)`;
     };
@@ -69,6 +88,15 @@ const Poti = ({ label, cmd, min, max, modCmd, modIdCmd }: Props) => {
     };
   }, [isActive]);
 
+  useEffect(() => {
+    if (cmd) {
+      sendMessage(cmd, val);
+    }
+    if (callback) {
+      callback(val);
+    }
+  }, [val]);
+
   return (
     <div className={styles.wrapper}>
       <span>{label}</span>
@@ -77,7 +105,12 @@ const Poti = ({ label, cmd, min, max, modCmd, modIdCmd }: Props) => {
           <div className={styles.mark} />
         </div>
       </div>
-      <span>{val.toFixed(2)}</span>
+      <span>
+        {val.toFixed(2)} {unit}
+      </span>
+      {waveformSelect && index !== undefined ? (
+        <WaveformSelect index={index} />
+      ) : null}
       {modCmd && modIdCmd ? (
         <>
           <ModDepth modCmd={modCmd} />

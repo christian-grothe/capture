@@ -1,0 +1,14 @@
+.wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.wrapper svg {
+  cursor: pointer;
+}

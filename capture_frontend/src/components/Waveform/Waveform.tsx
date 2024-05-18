@@ -9,6 +9,10 @@ const Waveform = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const bufferToDraw = useRef<number[]>(new Array(129).fill(0.01));
+  const [startPos, setStartPos] = useState(0);
+  const [endPos, setEndPos] = useState(0);
+  const [isStartDragging, setIsStartDragging] = useState(false);
+  const [isEndDragging, setIsEndDragging] = useState(false);
 
   const createContext = () => {
     if (!canvasRef.current) return;
@@ -20,14 +24,16 @@ const Waveform = () => {
     canvas.width = wrapperRef.current?.clientWidth || 400;
     canvas.height = wrapperRef.current?.clientHeight || 80;
     context.strokeStyle = "white";
-    context.fillStyle = "white";
     context.lineWidth = 0.5;
+    setStartPos(canvas.width * 0.15);
+    setEndPos(canvas.width * 0.85);
     setContext(context);
   };
 
   const draw = () => {
     if (!context || !canvasRef.current) return;
 
+    context.fillStyle = "white";
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     const canvasBaseline = canvasRef.current.height / 2;
 
@@ -40,7 +46,34 @@ const Waveform = () => {
 
       context.fillRect(x, y, 2, height);
     }
+
+    const height = canvasRef.current.height;
+    context.fillRect(startPos, 0, 2, height);
+    context.fillRect(endPos, 0, 2, height);
+    context.fillStyle = "rgba(255, 255, 255, 0.1)";
+    context.fillRect(startPos, 0, endPos - startPos, height);
   };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (!canvasRef.current) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    console.log(startPos, x);
+    if (x === startPos) {
+      console.log("startPos");
+    } else if (x === endPos) {
+      console.log("endpos");
+    }
+  };
+
+  // useEffect(() => {
+  //   if (!canvasRef.current) return;
+  //   canvasRef.current.addEventListener("mousedown", (e) => {
+  //     const rect = canvasRef.current?.getBoundingClientRect();
+  //     const x = e.clientX - rect!.left;
+  //     setStartPos(x);
+  //   });
+  // }, []);
 
   useEffect(() => {
     createContext();
@@ -63,7 +96,7 @@ const Waveform = () => {
   useEffect(() => {
     if (!context) return;
     draw();
-  }, [context]);
+  }, [context, startPos, endPos]);
 
   return (
     <div className={"container grow"}>
@@ -71,7 +104,11 @@ const Waveform = () => {
         <div className={styles.record}>
           <button onClick={() => sendMessage("rec")}></button>
         </div>
-        <canvas className={styles.canvas} ref={canvasRef} />
+        <canvas
+          className={styles.canvas}
+          ref={canvasRef}
+          onClick={handleClick}
+        />
       </div>
     </div>
   );

@@ -18,6 +18,8 @@ export const granular: Controller[] = [
     cmd: "setPlaySpeed",
     modCmd: "playSpeedModDepth",
     modIdCmd: "playSpeedModIndex",
+    min: 0,
+    max: 4,
   },
   {
     label: "Spray",

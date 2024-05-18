@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./fader.module.css";
 
 interface Props {
@@ -13,12 +13,12 @@ const Fader = ({ initVal, setMixVal, index }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const markRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (ev: MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (ev: MouseEvent) => {
     if (!isClicked || !markRef.current || !wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
     const height = wrapperRef.current.clientHeight;
-    const y = (ev.clientY - rect.top) / height;
-    if (y > 1 || y < 0) return;
+    let y = (ev.clientY - rect.top) / height;
+    y = Math.min(Math.max(y, 0), 1);
     setVal(1 - y);
     setMixVal(index, 1 - y);
     markRef.current.style.top = `${y * 100}%`;
@@ -33,13 +33,20 @@ const Fader = ({ initVal, setMixVal, index }: Props) => {
     }
   }, [initVal]);
 
+  useEffect(() => {
+    window.addEventListener("mouseup", () => setIsClicked(false));
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mouseup", () => setIsClicked(false));
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [isClicked]);
+
   return (
     <div
       className={styles.wrapper}
       ref={wrapperRef}
       onMouseDown={() => setIsClicked(true)}
-      onMouseUp={() => setIsClicked(false)}
-      onMouseMove={handleMouseMove}
     >
       <div className={styles.line}></div>
       <div className={styles.mark} ref={markRef}></div>
