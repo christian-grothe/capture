@@ -23,8 +23,8 @@ public:
   void setDensity(float rate);
   void setSpray(float sprayFactor_);
   void setSpread(float spreadFactor_);
-  void setLoopStart(float loopStart);
-  void setLoopLength(float loopLength);
+  void setLoopStart(double loopStart);
+  void setLoopLength(double loopLength);
   void setDelaytime(float delaytime);
   void setDelayFeedback(float feedback);
   void setInterpolationTime(float character);

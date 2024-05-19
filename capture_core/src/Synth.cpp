@@ -45,15 +45,15 @@ void Synth::setSpread(float spreadFactor) {
   }
 }
 
-void Synth::setLoopStart(float loopStart) {
+void Synth::setLoopStart(double loopStart) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].loopStart = loopStart * 100.0f;
+    voices[voice].loopStart = loopStart;
   }
 }
 
-void Synth::setLoopLength(float loopLength) {
+void Synth::setLoopLength(double loopLength) {
   for (int voice = 0; voice < VOICE_NUM; voice++) {
-    voices[voice].loopLength = loopLength * 100.0f;
+    voices[voice].loopLength = loopLength;
   }
 }
 

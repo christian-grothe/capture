@@ -9,10 +9,13 @@ const Waveform = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const bufferToDraw = useRef<number[]>(new Array(129).fill(0.01));
-  const [startPos, setStartPos] = useState(0);
-  const [endPos, setEndPos] = useState(0);
+  const startRef = useRef(0);
+  const endRef = useRef(0);
   const [isStartDragging, setIsStartDragging] = useState(false);
   const [isEndDragging, setIsEndDragging] = useState(false);
+  const [isDraggingLoop, setIsDraggingLoop] = useState(false);
+  const [update, setUpdate] = useState(0);
+const[distToStart,setDistToStart] = useState(0)
 
   const createContext = () => {
     if (!canvasRef.current) return;
@@ -25,8 +28,8 @@ const Waveform = () => {
     canvas.height = wrapperRef.current?.clientHeight || 80;
     context.strokeStyle = "white";
     context.lineWidth = 0.5;
-    setStartPos(canvas.width * 0.15);
-    setEndPos(canvas.width * 0.85);
+    startRef.current = canvas.width * 0.15;
+    endRef.current = canvas.width * 0.85;
     setContext(context);
   };
 
@@ -48,38 +51,63 @@ const Waveform = () => {
     }
 
     const height = canvasRef.current.height;
-    context.fillRect(startPos, 0, 2, height);
-    context.fillRect(endPos, 0, 2, height);
+    context.fillRect(startRef.current, 0, 2, height);
+    context.fillRect(endRef.current, 0, 2, height);
     context.fillStyle = "rgba(255, 255, 255, 0.1)";
-    context.fillRect(startPos, 0, endPos - startPos, height);
+    context.fillRect(
+      startRef.current,
+      0,
+      endRef.current - startRef.current,
+      height,
+    );
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    console.log(startPos, x);
-    if (x === startPos) {
-      console.log("startPos");
-    } else if (x === endPos) {
-      console.log("endpos");
+    if (x > startRef.current - 10 && x < startRef.current + 10) {
+      setIsStartDragging(true);
+    } else if (x > endRef.current - 10 && x < endRef.current + 10) {
+      setIsEndDragging(true);
+    } else if (x > startRef.current && x < endRef.current) {
+      setIsDraggingLoop(true);
+      setDistToStart(x-startRef.current)
     }
   };
 
-  // useEffect(() => {
-  //   if (!canvasRef.current) return;
-  //   canvasRef.current.addEventListener("mousedown", (e) => {
-  //     const rect = canvasRef.current?.getBoundingClientRect();
-  //     const x = e.clientX - rect!.left;
-  //     setStartPos(x);
-  //   });
-  // }, []);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!canvasRef.current) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (isStartDragging) {
+      startRef.current = x;
+      const loopLength =
+        (endRef.current - startRef.current) / canvasRef.current.width;
+      sendMessage("setLoopLength", loopLength);
+      sendMessage("setLoopStart", startRef.current / canvasRef.current.width);
+    } else if (isEndDragging) {
+      endRef.current = x;
+      const loopLength =
+        (endRef.current - startRef.current) / canvasRef.current.width;
+      sendMessage("setLoopLength", loopLength);
+    } else if (isDraggingLoop) {
+      const diff = x - startRef.current - distToStart;
+      startRef.current += diff;
+      endRef.current += diff;
+      sendMessage("setLoopStart", startRef.current / canvasRef.current.width);
+    }
+    setUpdate(x);
+  };
 
   useEffect(() => {
     createContext();
-  }, []);
+    window.addEventListener("mouseup", () => {
+      setIsStartDragging(false);
+      setIsEndDragging(false);
+      setIsDraggingLoop(false);
+    });
 
-  useEffect(() => {
     if (!captureNode) return;
     captureNode.port.onmessage = (event) => {
       switch (event.data.cmd) {
@@ -96,7 +124,7 @@ const Waveform = () => {
   useEffect(() => {
     if (!context) return;
     draw();
-  }, [context, startPos, endPos]);
+  }, [context, update]);
 
   return (
     <div className={"container grow"}>
@@ -107,7 +135,8 @@ const Waveform = () => {
         <canvas
           className={styles.canvas}
           ref={canvasRef}
-          onClick={handleClick}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
         />
       </div>
     </div>

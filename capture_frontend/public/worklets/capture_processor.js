@@ -134,6 +134,12 @@ export class CaptureProcessor extends AudioWorkletProcessor {
       case "setWaveform":
         this._synth.setModType(event.data.val.index, event.data.val.waveform);
         break;
+      case "setLoopStart":
+        this._synth.setLoopStart(event.data.val);
+        break;
+      case "setLoopLength":
+        this._synth.setLoopLength(event.data.val);
+        break;
       default:
         console.log(event.data);
         break;

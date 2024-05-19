@@ -11,6 +11,9 @@ public:
 
   int getNumSamples() { return buffer.size(); }
 
+  float loopStart{0.0f};
+  float loopEnd{1.0f};
+
 private:
   std::vector<float> buffer;
 };
