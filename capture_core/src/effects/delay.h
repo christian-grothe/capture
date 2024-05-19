@@ -2,11 +2,11 @@
 #include "../Utils.h"
 #include <vector>
 
-class Synth;
+class ModulationMixer;
 
 class Delay {
 public:
-  void init(Synth *synth_);
+  void init(ModulationMixer *modMixer_);
 
   Utils::Signal nextSample();
   Utils::Signal render(Utils::Signal input);
@@ -19,6 +19,11 @@ public:
   void setOutputGain(float outputGain_);
   void setInterpolationTime(float interpolationTime_);
 
+  float delayInputModIndex;
+  float delayInputModDepth;
+  float delayTimeModIndex;
+  float delayTimeModDepth;
+
 private:
   int writePos{0};
   int readPos{0};
@@ -27,7 +32,7 @@ private:
   int bufferSize;
   float sampleRate;
 
-  Synth *synth;
+  ModulationMixer *modMixer;
 
   float delaytime{0.5f};
   float targetDelaytime{0.5f};

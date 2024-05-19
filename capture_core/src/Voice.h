@@ -41,7 +41,7 @@ public:
 private:
   Synth *synth;
 
-  static constexpr int GRAIN_NUMS = 32;
+  static constexpr int GRAIN_NUMS = 8;
   Grain grains[GRAIN_NUMS];
 
   Envelope env;
