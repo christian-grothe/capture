@@ -31,7 +31,7 @@ public:
   void setLoopStart(float loopStart, uint8_t bufIndex);
   void setLoopEnd(float loopEnd, uint8_t bufIndex);
 
-  void record(uint8_t bufIndex);
+  void record();
 
   void startPlaying(uint8_t midiNote);
   void stopPlaying(uint8_t midiNote);
@@ -46,6 +46,7 @@ public:
   enum PlaybackDir { Normal, Reverse, BackAndForth };
 
   bool isRecording;
+  int writePos;
   PlaybackDir grainDir;
   PlaybackDir playbackDir;
   AudioBuffer loopBuffer;
@@ -71,6 +72,4 @@ public:
 private:
   static constexpr int VOICE_NUM = 16;
   Voice voices[VOICE_NUM];
-
-  int writePos;
 };

@@ -44,6 +44,8 @@ void Synth::setSpread(float spreadFactor) {
   }
 }
 
+void Synth::record() { isRecording = true; }
+
 Utils::Signal Synth::render() {
   Utils::Signal output;
 

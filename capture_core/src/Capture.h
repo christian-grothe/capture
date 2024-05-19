@@ -19,6 +19,14 @@ public:
   void setSpray(float sprayFactor_, uint8_t bufIndex);
   void setSpread(float spreadFactor_, uint8_t bufIndex);
 
+  void setDelaytime(float delaytime);
+  void setDelayFeedback(float feedback);
+  void setDelayInterpolationTime(float interpolationTime);
+  void setDelayInputGain(float inputGain);
+  void setDelayOutputGain(float outputGain);
+
+  void record(uint8_t bufIndex);
+
   void setModulationType(uint8_t index, Modulator::ModulationType newType);
   void setModulationFreq(uint8_t index, Modulator::ModulationType newFreq);
 
