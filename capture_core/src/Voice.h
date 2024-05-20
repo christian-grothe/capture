@@ -55,8 +55,8 @@ private:
   float loopBufferSize;
   bool isPlaying;
   float pitch;
-  float grainTriggerModDepth{3};
-  float grainLengthModDepth{3};
+  float grainTriggerModDepth;
+  float grainLengthModDepth;
 
   float grainTriggerRate; // amount of triggers per second
   float grainTriggerInc;  // counts from 0 to grainTriggerRate

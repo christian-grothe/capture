@@ -79,6 +79,6 @@ private:
     auto sample =
         Utils::cubicHermiteSpline(loopBufferData, index, loopBufferLength);
 
-    return sample * loopBuffer->gain;
+    return sample;
   }
 };

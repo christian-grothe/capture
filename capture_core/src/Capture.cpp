@@ -41,7 +41,10 @@ void Capture::setDelayOutputGain(float outputGain) {
 void Capture::init(int totalChannelNum, int bufferSize, float sampleRate_) {
   delay.init(&modMixer);
   delay.setSize(bufferSize, sampleRate_);
-  modMixer.init(totalChannelNum);
+  modMixer.init(sampleRate_);
+  for (int synth = 0; synth < SYNTH_NUM; synth++) {
+    synths[synth].init(totalChannelNum, bufferSize, sampleRate_, &modMixer);
+  }
 }
 
 void Capture::startPlaying(uint8_t midiNote) {

@@ -15,7 +15,7 @@ const Waveform = () => {
   const [isEndDragging, setIsEndDragging] = useState(false);
   const [isDraggingLoop, setIsDraggingLoop] = useState(false);
   const [update, setUpdate] = useState(0);
-const[distToStart,setDistToStart] = useState(0)
+  const [distToStart, setDistToStart] = useState(0);
 
   const createContext = () => {
     if (!canvasRef.current) return;
@@ -72,7 +72,7 @@ const[distToStart,setDistToStart] = useState(0)
       setIsEndDragging(true);
     } else if (x > startRef.current && x < endRef.current) {
       setIsDraggingLoop(true);
-      setDistToStart(x-startRef.current)
+      setDistToStart(x - startRef.current);
     }
   };
 
@@ -112,8 +112,9 @@ const[distToStart,setDistToStart] = useState(0)
     captureNode.port.onmessage = (event) => {
       switch (event.data.cmd) {
         case "audioData":
-          bufferToDraw.current[event.data.index] = event.data.val;
+          bufferToDraw.current = event.data.data;
           draw();
+          console.log(event.data);
           break;
         default:
           break;
@@ -130,7 +131,7 @@ const[distToStart,setDistToStart] = useState(0)
     <div className={"container grow"}>
       <div className={styles.canvasContainer} ref={wrapperRef}>
         <div className={styles.record}>
-          <button onClick={() => sendMessage("rec")}></button>
+          <button onClick={() => sendMessage("rec", 0)}></button>
         </div>
         <canvas
           className={styles.canvas}
