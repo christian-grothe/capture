@@ -1,23 +1,24 @@
 #include "Capture.h"
+#include <iostream>
 
 // Granular Setters
-void Capture::setGrainLength(float grainLength_, uint8_t bufIndex) {
+void Capture::setGrainLength(float grainLength_, int bufIndex) {
   synths[bufIndex].setGrainLength(grainLength_);
 }
 
-void Capture::setPlaySpeed(float playSpeed_, uint8_t bufIndex) {
+void Capture::setPlaySpeed(float playSpeed_, int bufIndex) {
   synths[bufIndex].setPlaySpeed(playSpeed_);
 }
 
-void Capture::setDensity(float density_, uint8_t bufIndex) {
+void Capture::setDensity(float density_, int bufIndex) {
   synths[bufIndex].setDensity(density_);
 }
 
-void Capture::setSpray(float sprayFactor_, uint8_t bufIndex) {
+void Capture::setSpray(float sprayFactor_, int bufIndex) {
   synths[bufIndex].setSpray(sprayFactor_);
 }
 
-void Capture::setSpread(float spreadFactor_, uint8_t bufIndex) {
+void Capture::setSpread(float spreadFactor_, int bufIndex) {
   synths[bufIndex].setSpread(spreadFactor_);
 }
 
@@ -47,19 +48,19 @@ void Capture::init(int totalChannelNum, int bufferSize, float sampleRate_) {
   }
 }
 
-void Capture::startPlaying(uint8_t midiNote) {
+void Capture::startPlaying(int midiNote) {
   for (int synth = 0; synth < SYNTH_NUM; synth++) {
     synths[synth].startPlaying(midiNote);
   }
 }
 
-void Capture::stopPlaying(uint8_t midiNote) {
+void Capture::stopPlaying(int midiNote) {
   for (int synth = 0; synth < SYNTH_NUM; synth++) {
     synths[synth].stopPlaying(midiNote);
   }
 }
 
-void Capture::record(uint8_t bufIndex) { synths[bufIndex].record(); }
+void Capture::record(int bufIndex) { synths[bufIndex].record(); }
 
 void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
   for (int sample = 0; sample < numSamples; sample++) {
@@ -87,7 +88,7 @@ void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
     output *= 0.5;
     output += delay.render(output);
 
-    writePtrs[0][sample] += output.left;
-    writePtrs[1][sample] += output.right;
+    /* writePtrs[0][sample] += output.left; */
+    /* writePtrs[1][sample] += output.right; */
   }
 }
