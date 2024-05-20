@@ -72,13 +72,17 @@ void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
     output.left = 0.0f;
     output.right = 0.0f;
 
-    /* writePtrs[0][sample] = 0.0f; */
-    /* writePtrs[1][sample] = 0.0f; */
+    writePtrs[0][sample] = 0.0f;
+    writePtrs[1][sample] = 0.0f;
+
+    for (int synth = 0; synth < SYNTH_NUM; synth++) {
+      output += synths[synth].render();
+    }
 
     output *= 0.5;
     output += delay.render(output);
 
-    /* writePtrs[0][sample] += output.left; */
-    /* writePtrs[1][sample] += output.right; */
+    writePtrs[0][sample] += output.left;
+    writePtrs[1][sample] += output.right;
   }
 }
