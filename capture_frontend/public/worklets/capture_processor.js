@@ -19,7 +19,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
     this.samplesPerBar = Math.floor(
       this.audioBufferSize / this.bufferToDrawSize,
     );
-    this.bufferToDraw = new Float32Array(this.bufferToDrawSize).fill(0);
     this._synth.init(2, this.audioBufferSize, sampleRate);
   }
 
@@ -38,7 +37,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
         this.currentSample++;
         if (this.currentSample >= this.samplesPerBar) {
           const average = this.currentSampleSum / this.samplesPerBar;
-          this.bufferToDraw[this.currentIndex] = average;
           this.currentIndex++;
           this.currentSampleSum = 0;
           this.currentSample = 0;
