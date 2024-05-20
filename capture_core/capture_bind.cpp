@@ -21,7 +21,7 @@ EMSCRIPTEN_BINDINGS(CAPTURE_CLASS) {
   class_<CaptureWrapper, base<Capture>>("Capture").constructor().function(
       "render", &CaptureWrapper::render, allow_raw_pointers());
 
-  class_<Capture>("Capture")
+  class_<Capture>("CaptureBase")
       .function("init", &Capture::init)
       .function("startPlaying", &Capture::startPlaying)
       .function("stopPlaying", &Capture::stopPlaying)

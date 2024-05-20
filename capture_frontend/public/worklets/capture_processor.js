@@ -47,7 +47,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
     super();
     this._capture = new Module.Capture();
     this.sampleRate = sampleRate;
-    this.audioBufferSizeSec = 10;
     this.audioBufferSize = this.audioBufferSizeSec * sampleRate;
     this._heapInputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
     this._heapOutputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 2, 2);
@@ -106,8 +105,8 @@ export class CaptureProcessor extends AudioWorkletProcessor {
   handleMessage(event) {
     switch (event.data.cmd) {
       case "rec":
-        this._capture.record(event.data.val)
-      break;
+        this._capture.record(event.data.val);
+        break;
       default:
         console.log(event.data);
         break;
@@ -115,4 +114,4 @@ export class CaptureProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor("captureProcessor", CaptureProcessor);
+registerProcessor("capture", CaptureProcessor);

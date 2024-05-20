@@ -25,7 +25,7 @@ export const useAppStore = create<UseAppStore>((set, get) => {
       set({ audioCtx });
 
       await audioCtx.audioWorklet.addModule("worklets/capture_processor.js");
-      const captureNode = new AudioWorkletNode(audioCtx, "captureProcessor", {
+      const captureNode = new AudioWorkletNode(audioCtx, "capture", {
         numberOfInputs: 1,
         outputChannelCount: [2],
       });
