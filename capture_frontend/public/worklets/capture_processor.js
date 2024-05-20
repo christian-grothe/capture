@@ -46,7 +46,6 @@ export class CaptureProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
     this._capture = new Module.Capture();
-    this.sampleRate = sampleRate;
     this.audioBufferSizeSec = 10;
     this.audioBufferSize = this.audioBufferSizeSec * sampleRate;
     this._heapInputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
