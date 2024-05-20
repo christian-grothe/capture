@@ -63,6 +63,7 @@ void Capture::stopPlaying(int midiNote) {
 void Capture::record(int bufIndex) { synths[bufIndex].record(); }
 
 void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
+
   for (int sample = 0; sample < numSamples; sample++) {
     modMixer.update();
 
@@ -71,24 +72,13 @@ void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
     output.left = 0.0f;
     output.right = 0.0f;
 
-    /* for (int synth = 0; synth < SYNTH_NUM; synth++) { */
-    /*   Synth currentSynth = synths[synth]; */
-    /*   if (currentSynth.isRecording) { */
-    /*     const auto writePtr = currentSynth.loopBuffer.getWritePtr(); */
-    /*     writePtr[currentSynth.writePos] = readPtr[sample]; */
-    /*     currentSynth.writePos++; */
-    /*     if (currentSynth.writePos >= currentSynth.loopBuffer.getNumSamples()) { */
-    /*       currentSynth.writePos = 0; */
-    /*       currentSynth.isRecording = false; */
-    /*     } */
-    /*   } */
-    /*   output += currentSynth.render(); */
-    /* } */
+    /* writePtrs[0][sample] = 0.0f; */
+    /* writePtrs[1][sample] = 0.0f; */
 
     output *= 0.5;
     output += delay.render(output);
 
-    writePtrs[0][sample] += output.left;
-    writePtrs[1][sample] += output.right;
+    /* writePtrs[0][sample] += output.left; */
+    /* writePtrs[1][sample] += output.right; */
   }
 }

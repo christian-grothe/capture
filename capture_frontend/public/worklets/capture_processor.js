@@ -80,18 +80,18 @@ export class CaptureProcessor extends AudioWorkletProcessor {
       this._heapInputBuffer.getChannelData(0).set(input);
     }
 
-    if (this.isRecording()) {
-      for (let i = 0; i < input.length; i++) {
-        const currentSample = Math.abs(input[i]);
-        for (let i = 0; i < this._capture.SYNTH_NUM; i++) {
-          if (this._capture.synths[i].isRecording) {
-            this.buffersToDraw[i].addSample(currentSample);
-          } else {
-            this.buffersToDraw[i].reset();
-          }
-        }
-      }
-    }
+    // if (this.isRecording()) {
+    //   for (let i = 0; i < input.length; i++) {
+    //     const currentSample = Math.abs(input[i]);
+    //     for (let i = 0; i < this._capture.SYNTH_NUM; i++) {
+    //       if (this._capture.synths[i].isRecording) {
+    //         this.buffersToDraw[i].addSample(currentSample);
+    //       } else {
+    //         this.buffersToDraw[i].reset();
+    //       }
+    //     }
+    //   }
+    // }
 
     this._capture.render(
       this._heapInputBuffer.getHeapAddress(),

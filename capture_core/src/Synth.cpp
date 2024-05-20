@@ -120,3 +120,39 @@ void Synth::handleMidiCc(uint8_t cc, uint8_t val) {
     break;
   }
 }
+
+/* void Synth::render(const float *readPtr, float **writePtrs, int numSamples) { */
+
+/*   int loopBufferSize = loopBuffer.getNumSamples(); */
+/*   float *loopWritePtr = loopBuffer.getWritePtr(); */
+
+/*   for (int sample = 0; sample < numSamples; sample++) { */
+/*     modMixer.update(); */
+/*     Utils::Signal output; */
+
+/*     if (isRecording) { */
+/*       loopWritePtr[writePos] = readPtr[sample]; */
+/*       writePos++; */
+
+/*       if (writePos > loopBufferSize) { */
+/*         writePos = 0; */
+/*         isRecording = false; */
+/*       } */
+/*     } */
+
+/*     writePtrs[0][sample] = 0.0f; */
+/*     writePtrs[1][sample] = 0.0f; */
+
+/*     for (int voice = 0; voice < VOICE_NUM; voice++) { */
+/*       if (voices[voice].getIsPlaying()) { */
+/*         output += voices[voice].render(); */
+/*       } */
+/*     } */
+
+/*     output *= 0.25; */
+/*     output += delay.render(output); */
+
+/*     writePtrs[0][sample] += output.left; */
+/*     writePtrs[1][sample] += output.right; */
+/*   } */
+/* } */
