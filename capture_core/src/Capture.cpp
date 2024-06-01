@@ -1,5 +1,4 @@
 #include "Capture.h"
-#include <iostream>
 
 // Granular Setters
 void Capture::setGrainLength(float grainLength_, int bufIndex) {
@@ -62,6 +61,8 @@ void Capture::stopPlaying(int midiNote) {
 
 void Capture::record(int bufIndex) { synths[bufIndex].record(); }
 
+bool Capture::isRecording(int bufIndex) { return synths[bufIndex].isRecording; }
+
 void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
 
   for (int sample = 0; sample < numSamples; sample++) {
@@ -76,7 +77,7 @@ void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
     writePtrs[1][sample] = 0.0f;
 
     for (int synth = 0; synth < SYNTH_NUM; synth++) {
-      output += synths[synth].render();
+      output += synths[synth].render(readPtr[sample]);
     }
 
     output *= 0.5;

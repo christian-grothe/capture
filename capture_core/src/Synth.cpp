@@ -1,5 +1,6 @@
 #include "Synth.h"
 #include <cstdint>
+#include <iostream>
 
 // Parameter Setters
 void Synth::setAttack(float attack) {
@@ -46,8 +47,18 @@ void Synth::setSpread(float spreadFactor) {
 
 void Synth::record() { isRecording = true; }
 
-Utils::Signal Synth::render() {
+Utils::Signal Synth::render(float inputSample) {
   Utils::Signal output;
+  if (isRecording) {
+    auto writePtr = loopBuffer.getWritePtr();
+    writePtr[writePos] = inputSample;
+    writePos++;
+    if (writePos > loopBuffer.getNumSamples()) {
+      std::cout << "FINISH"  << std::endl;
+      writePos = 0;
+      isRecording = false;
+    }
+  }
 
   for (int voice = 0; voice < VOICE_NUM; voice++) {
     if (voices[voice].getIsPlaying()) {
@@ -63,6 +74,7 @@ void Synth::init(int totalChannelNum, int bufferSize, float sampleRate_,
   writePos = 0.0f;
   playbackDir = PlaybackDir::Normal;
   grainDir = PlaybackDir::Normal;
+  loopBuffer.setSize(bufferSize);
 
   for (int voice = 0; voice < VOICE_NUM; voice++) {
     voices[voice].init(totalChannelNum, bufferSize, sampleRate_, this);
@@ -90,7 +102,7 @@ void Synth::handleMidi(uint8_t data1, uint8_t data2, uint8_t data3) {
   case MidiCommands::NoteOn: {
     startPlaying(data2);
     break;
-  }
+  } 
 
   case MidiCommands::NoteOff: {
     stopPlaying(data2);
@@ -121,7 +133,8 @@ void Synth::handleMidiCc(uint8_t cc, uint8_t val) {
   }
 }
 
-/* void Synth::render(const float *readPtr, float **writePtrs, int numSamples) { */
+/* void Synth::render(const float *readPtr, float **writePtrs, int numSamples) {
+ */
 
 /*   int loopBufferSize = loopBuffer.getNumSamples(); */
 /*   float *loopWritePtr = loopBuffer.getWritePtr(); */

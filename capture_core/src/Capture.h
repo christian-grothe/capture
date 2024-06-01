@@ -26,6 +26,7 @@ public:
   void setDelayOutputGain(float outputGain);
 
   void record(int bufIndex);
+  bool isRecording(int bufIndex);
 
   void setModulationType(int index, Modulator::ModulationType newType);
   void setModulationFreq(int index, Modulator::ModulationType newFreq);

@@ -4,13 +4,13 @@ import HeapAudioBuffer from "./AudioHeap.js";
 const NUM_FRAMES = 128;
 
 class BufferToDraw {
-  constructor(bufIndex, bufferSize, bars, processor) {
+  constructor(bufIndex, bufferSize, samplesPerBar, processor) {
     this.bufIndex = bufIndex;
     this.buffer = new Float32Array(bufferSize).fill(0);
     this.currentSampleSum = 0;
     this.currentIndex = 0;
     this.currentSample = 0;
-    this.samplesPerBar = Math.floor(bufferSize / bars);
+    this.samplesPerBar = samplesPerBar;
     this.processor = processor;
   }
 
@@ -61,9 +61,8 @@ export class CaptureProcessor extends AudioWorkletProcessor {
   }
 
   isRecording() {
-    for (let i = 0; i < this._capture.SYNTH_NUM; i++) {
-      if (this._capture.synths[i].isRecording) {
-        console.log("Recording", i);
+    for (let i = 0; i < 4; i++) {
+      if (this._capture.isRecording(i)) {
         return true;
       }
     }
@@ -79,18 +78,16 @@ export class CaptureProcessor extends AudioWorkletProcessor {
       this._heapInputBuffer.getChannelData(0).set(input);
     }
 
-    // if (this.isRecording()) {
-    //   for (let i = 0; i < input.length; i++) {
-    //     const currentSample = Math.abs(input[i]);
-    //     for (let i = 0; i < this._capture.SYNTH_NUM; i++) {
-    //       if (this._capture.synths[i].isRecording) {
-    //         this.buffersToDraw[i].addSample(currentSample);
-    //       } else {
-    //         this.buffersToDraw[i].reset();
-    //       }
-    //     }
-    //   }
-    // }
+    for (let i = 0; i < input.length; i++) {
+      const currentSample = Math.abs(input[i]);
+      for (let i = 0; i < this.buffersToDraw.length; i++) {
+        if (this._capture.isRecording(i)) {
+          this.buffersToDraw[i].addSample(currentSample);
+        } else {
+          this.buffersToDraw[i].reset();
+        }
+      }
+    }
 
     this._capture.render(
       this._heapInputBuffer.getHeapAddress(),
@@ -107,6 +104,12 @@ export class CaptureProcessor extends AudioWorkletProcessor {
     switch (event.data.cmd) {
       case "rec":
         this._capture.record(event.data.val);
+        break;
+      case "playNote":
+        this._capture.startPlaying(event.data.val);
+        break;
+      case "stopNote":
+        this._capture.stopPlaying(event.data.val);
         break;
       default:
         console.log(event.data);

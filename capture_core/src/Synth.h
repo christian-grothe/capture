@@ -14,7 +14,7 @@ class Synth {
 public:
   void init(int totalChannelNum, int bufferSize, float sampleRate_,
             ModulationMixer *modMixer_);
-  Utils::Signal render();
+  Utils::Signal render(float inputSample);
 
   void handleMidi(uint8_t data1, uint8_t data2, uint8_t data3);
   void handleMidiCc(uint8_t cc, uint8_t val);

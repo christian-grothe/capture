@@ -52,7 +52,6 @@ const Poti = ({
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current || !isActive) return;
       const y = startRef.current - e.clientY;
-
       const inc = 0.015;
 
       if (y > prevY.current) {
