@@ -115,7 +115,6 @@ const Waveform = ({ bufferToDraw, index }: Props) => {
 
   useEffect(() => {
     if (!context) return;
-    console.log("draw");
     draw();
   }, [context, update, bufferToDraw]);
 

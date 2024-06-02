@@ -6,10 +6,10 @@ import Waveform from "./Waveform";
 const Waveforms = () => {
   const captureNode = useAppStore((state) => state.captureNode);
   const buffersToDraw = useRef<number[][]>([
-    new Array(129).fill(0.01),
-    new Array(129).fill(0.01),
-    new Array(129).fill(0.01),
-    new Array(129).fill(0.01),
+    new Array(128).fill(0.01),
+    new Array(128).fill(0.01),
+    new Array(128).fill(0.01),
+    new Array(128).fill(0.01),
   ]);  
   const [, setRenderTrigger] = useState(0); 
 
