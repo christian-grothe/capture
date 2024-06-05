@@ -5,7 +5,6 @@ import styles from "./styles/waveform.module.css";
 import Waveform from "./Waveform";
 import Thumbnail from "./Thumbnail";
 import ControllSection from "../ControllSection/ControllSection";
-import { granular } from "../ControllSection/controllers";
 
 const Waveforms = () => {
   const captureNode = useAppStore((state) => state.captureNode);
@@ -45,8 +44,7 @@ const Waveforms = () => {
         index={selectedBuffer}
         bufferToDraw={buffersToDraw.current[selectedBuffer]}
       />
-
-        <ControllSection controllers={granular} />
+      <ControllSection index={selectedBuffer} />
     </div>
   );
 };

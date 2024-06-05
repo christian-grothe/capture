@@ -1,26 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./modDepth.module.css";
-import { ModCommands } from "../../../types/types";
-import { useAppStore } from "../../../store/useAppStore";
 
 interface Props {
-  modCmd: ModCommands;
+  callback:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((val: number) => void);
+  value: number;
 }
 
-const ModDepth = ({ modCmd }: Props) => {
+const ModDepth = ({ callback, value }: Props) => {
   const [isActive, setIsActive] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const sendMessage = useAppStore((state) => state.sendMessage);
 
   const handleMouseMove = (ev: MouseEvent) => {
     if (!isActive || !wrapperRef.current || !barRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    let y = (ev.clientY - rect.top) / wrapperRef.current.clientHeight;
-    y = Math.min(Math.max(y, 0), 1);
-    barRef.current.style.top = `${y * 100}%`;
-    sendMessage(modCmd, 1 - y);
+    const value = 1 - (ev.clientY - rect.top) / wrapperRef.current.clientHeight;
+    callback(Math.min(Math.max(value, 0), 1));
   };
+
+  useEffect(() => {
+    if (!wrapperRef.current || !barRef.current) return;
+    barRef.current.style.top = `${100 - value * 100}%`;
+  }, [value]);
 
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);

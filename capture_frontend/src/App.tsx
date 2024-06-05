@@ -12,8 +12,6 @@ function App() {
         <Delay />
       </div>
       <div className="section gap">
-        <Keyboard />
-        <LfoController />
       </div>
     </div>
   );

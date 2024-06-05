@@ -3,6 +3,8 @@
   flex-direction: column;
   width: 50px;
   position: relative;
+  margin-bottom: 30px;
+  margin-right: 25px;
 }
 
 .wrapper span{

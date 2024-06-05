@@ -1,42 +1,33 @@
 import { useRef, useState, useEffect } from "react";
 import styles from "./poti.module.css";
-import { useAppStore } from "../../../store/useAppStore";
-import { Commands, ModCommands } from "../../../types/types";
 import ModDepth from "./ModDepth";
 import ModIndex from "./ModIndex";
-import WaveformSelect from "./WaveformSelect";
+
+interface ModProps {
+  valueModDepth: number;
+  callbackModDepth:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((val: number) => void);
+  valueModIndex: number;
+  callbackModIndex:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((val: number) => void);
+}
 
 interface Props {
   label: string;
   unit?: string;
-  cmd?: Commands;
   min?: number;
   max?: number;
-  modCmd?: ModCommands;
-  modIdCmd?: ModCommands;
-  waveformSelect?: boolean;
-  index?: number;
-  callback?:
-  | React.Dispatch<React.SetStateAction<number>>
-  | ((val: number) => void);
+  value: number;
+  callback:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((val: number) => void);
+  modProps?: ModProps;
 }
 
-const Poti = ({
-  label,
-  unit,
-  cmd,
-  min,
-  max,
-  modCmd,
-  modIdCmd,
-  waveformSelect,
-  index,
-  callback,
-}: Props) => {
-  const sendMessage = useAppStore((state) => state.sendMessage);
-
+const Poti = ({ label, unit, min, max, value, callback, modProps }: Props) => {
   const [isActive, setIsActive] = useState(false);
-  const [val, setVal] = useState(min || 0);
   const startRef = useRef(0);
   const currentVal = useRef(0);
   const prevY = useRef(0);
@@ -49,6 +40,13 @@ const Poti = ({
   };
 
   useEffect(() => {
+    if (!containerRef.current) return;
+    const rotation = value * 245 - 45;
+    containerRef.current.style.transform = `rotate(${rotation}deg)`;
+    currentVal.current = value;
+  }, [value]);
+
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current || !isActive) return;
       const y = startRef.current - e.clientY;
@@ -59,17 +57,14 @@ const Poti = ({
       } else {
         currentVal.current -= inc;
       }
-
       currentVal.current = Math.min(Math.max(currentVal.current, 0), 1);
       prevY.current = y;
 
       if (min !== undefined && max !== undefined) {
-        setVal(currentVal.current * (max - min) + min);
+        callback(currentVal.current * (max - min) + min);
       } else {
-        setVal(currentVal.current);
+        callback(currentVal.current);
       }
-      const rotation = currentVal.current * 245 - 45;
-      containerRef.current.style.transform = `rotate(${rotation}deg)`;
     };
 
     const handleMouseUp = () => {
@@ -87,36 +82,32 @@ const Poti = ({
     };
   }, [isActive]);
 
-  useEffect(() => {
-    if (cmd) {
-      sendMessage(cmd, val);
-    }
-    if (callback) {
-      callback(val);
-    }
-  }, [val]);
-
   return (
-      <div className={styles.wrapper}>
-        <span>{label}</span>
-        <div className={styles.container} onMouseDown={handleStart}>
-          <div className={styles.circle} ref={containerRef}>
-            <div className={styles.mark} />
-          </div>
+    <div className={styles.wrapper}>
+      <span>{label}</span>
+      <div className={styles.container} onMouseDown={handleStart}>
+        <div className={styles.circle} ref={containerRef}>
+          <div className={styles.mark} />
         </div>
-        <span>
-          {val.toFixed(2)} {unit}
-        </span>
-        {waveformSelect && index !== undefined ? (
-          <WaveformSelect index={index} />
-        ) : null}
-        {modCmd && modIdCmd ? (
-          <>
-            <ModDepth modCmd={modCmd} />
-            <ModIndex min={1} max={4} cmd={modIdCmd} />
-          </>
-        ) : null}
       </div>
+      <span>
+        {value.toFixed(2)} {unit}
+      </span>
+      {modProps ? (
+        <>
+          <ModDepth
+            callback={modProps.callbackModDepth}
+            value={modProps.valueModDepth}
+          />
+          <ModIndex
+            callback={modProps.callbackModIndex}
+            value={modProps.valueModIndex}
+            min={1}
+            max={4}
+          />
+        </>
+      ) : null}
+    </div>
   );
 };
 
