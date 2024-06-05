@@ -1,23 +1,26 @@
 import { useEffect, useRef, useState } from "react";
+import styles from "./styles/waveform.module.css";
 
 interface Props {
   audioBuffer: number[];
+  isSelected: boolean;
+  selectBuffer: () => void;
 }
 
-const Thumbnail = ({ audioBuffer }: Props) => {
+const Thumbnail = ({ audioBuffer, selectBuffer, isSelected }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
 
   const createContext = () => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !wrapperRef.current) return;
     const canvas = canvasRef.current;
     const context = canvasRef.current.getContext(
       "2d",
     ) as CanvasRenderingContext2D;
 
-    canvas.width = wrapperRef.current?.clientWidth || 400;
-    canvas.height = wrapperRef.current?.clientHeight || 80;
+    canvas.width = wrapperRef.current.clientWidth;
+    canvas.height = wrapperRef.current.clientHeight;
     context.strokeStyle = "white";
     context.lineWidth = 0.5;
     setContext(context);
@@ -50,7 +53,7 @@ const Thumbnail = ({ audioBuffer }: Props) => {
   }, []);
 
   return (
-    <div ref={wrapperRef}>
+    <div ref={wrapperRef} className={`${styles.thumbnail} ${isSelected ? styles.selected : ""}`} onClick={selectBuffer}>
       <canvas ref={canvasRef} />
     </div>
   );

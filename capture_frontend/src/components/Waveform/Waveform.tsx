@@ -6,7 +6,7 @@ interface Props {
   bufferToDraw: number[];
   index: number;
 }
-const Waveform = ({ bufferToDraw, index }: Props) => {
+const Waveform = ({ bufferToDraw, index  }: Props) => {
   const sendMessage = useAppStore((state) => state.sendMessage);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,14 +20,14 @@ const Waveform = ({ bufferToDraw, index }: Props) => {
   const [distToStart, setDistToStart] = useState(0);
 
   const createContext = () => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !wrapperRef.current) return;
     const canvas = canvasRef.current;
     const context = canvasRef.current.getContext(
       "2d",
     ) as CanvasRenderingContext2D;
 
-    canvas.width = wrapperRef.current?.clientWidth || 400;
-    canvas.height = wrapperRef.current?.clientHeight || 80;
+    canvas.width = wrapperRef.current.clientWidth;
+    canvas.height = wrapperRef.current.clientHeight;
     context.strokeStyle = "white";
     context.lineWidth = 0.5;
     startRef.current = canvas.width * 0.15;

@@ -29,6 +29,12 @@ export const granular: Controller[] = [
     label: "Spread",
     cmd: "setSpread",
   },
+  {
+    label: "Gain",
+    cmd: "setGain",
+    modCmd: "gainModDepth",
+    modIdCmd: "gainModIndex",
+  },
 ];
 
 export const delay: Controller[] = [

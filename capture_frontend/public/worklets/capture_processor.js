@@ -52,10 +52,10 @@ export class CaptureProcessor extends AudioWorkletProcessor {
     this._heapOutputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 2, 2);
     this.port.onmessage = this.handleMessage.bind(this);
     this.buffersToDraw = [
-      new BufferToDraw(0, 128, (10 * sampleRate) / 128, this),
-      new BufferToDraw(1, 128, (10 * sampleRate) / 128, this),
-      new BufferToDraw(2, 128, (10 * sampleRate) / 128, this),
-      new BufferToDraw(3, 128, (10 * sampleRate) / 128, this),
+      new BufferToDraw(0, 256, (10 * sampleRate) / 256, this),
+      new BufferToDraw(1, 256, (10 * sampleRate) / 256, this),
+      new BufferToDraw(2, 256, (10 * sampleRate) / 256, this),
+      new BufferToDraw(3, 256, (10 * sampleRate) / 256, this),
     ];
     this._capture.init(2, this.audioBufferSize, sampleRate);
   }

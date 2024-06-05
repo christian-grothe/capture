@@ -17,8 +17,8 @@ interface Props {
   waveformSelect?: boolean;
   index?: number;
   callback?:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((val: number) => void);
+  | React.Dispatch<React.SetStateAction<number>>
+  | ((val: number) => void);
 }
 
 const Poti = ({
@@ -97,26 +97,26 @@ const Poti = ({
   }, [val]);
 
   return (
-    <div className={styles.wrapper}>
-      <span>{label}</span>
-      <div className={styles.container} onMouseDown={handleStart}>
-        <div className={styles.circle} ref={containerRef}>
-          <div className={styles.mark} />
+      <div className={styles.wrapper}>
+        <span>{label}</span>
+        <div className={styles.container} onMouseDown={handleStart}>
+          <div className={styles.circle} ref={containerRef}>
+            <div className={styles.mark} />
+          </div>
         </div>
+        <span>
+          {val.toFixed(2)} {unit}
+        </span>
+        {waveformSelect && index !== undefined ? (
+          <WaveformSelect index={index} />
+        ) : null}
+        {modCmd && modIdCmd ? (
+          <>
+            <ModDepth modCmd={modCmd} />
+            <ModIndex min={1} max={4} cmd={modIdCmd} />
+          </>
+        ) : null}
       </div>
-      <span>
-        {val.toFixed(2)} {unit}
-      </span>
-      {waveformSelect && index !== undefined ? (
-        <WaveformSelect index={index} />
-      ) : null}
-      {modCmd && modIdCmd ? (
-        <>
-          <ModDepth modCmd={modCmd} />
-          <ModIndex min={1} max={4} cmd={modIdCmd} />
-        </>
-      ) : null}
-    </div>
   );
 };
 

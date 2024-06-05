@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "../../store/useAppStore";
+import styles from "./styles/waveform.module.css";
 
 import Waveform from "./Waveform";
+import Thumbnail from "./Thumbnail";
+import ControllSection from "../ControllSection/ControllSection";
+import { granular } from "../ControllSection/controllers";
 
 const Waveforms = () => {
   const captureNode = useAppStore((state) => state.captureNode);
   const buffersToDraw = useRef<number[][]>([
-    new Array(128).fill(0.01),
-    new Array(128).fill(0.01),
-    new Array(128).fill(0.01),
-    new Array(128).fill(0.01),
-  ]);  
-  const [, setRenderTrigger] = useState(0); 
+    new Array(256).fill(0.01),
+    new Array(256).fill(0.01),
+    new Array(256).fill(0.01),
+    new Array(256).fill(0.01),
+  ]);
+  const [, setRenderTrigger] = useState(0);
+  const [selectedBuffer, setSelectedBuffer] = useState(0);
 
   useEffect(() => {
     if (!captureNode) return;
@@ -25,10 +30,23 @@ const Waveforms = () => {
   }, [captureNode]);
 
   return (
-    <div className="container grow">
-      {buffersToDraw.current.map((buffer, i) => (
-        <Waveform key={i} index={i} bufferToDraw={buffer} />
-      ))}
+    <div className="container flex-column gap">
+      <div className={styles.thumbnailContainer}>
+        {buffersToDraw.current.map((buffer, i) => (
+          <Thumbnail
+            key={i}
+            audioBuffer={buffer}
+            selectBuffer={() => setSelectedBuffer(i)}
+            isSelected={selectedBuffer === i}
+          />
+        ))}
+      </div>
+      <Waveform
+        index={selectedBuffer}
+        bufferToDraw={buffersToDraw.current[selectedBuffer]}
+      />
+
+        <ControllSection controllers={granular} />
     </div>
   );
 };

@@ -41,7 +41,7 @@ const LfoController = () => {
   };
 
   return (
-    <div className={"container grow"}>
+    <div className={"container"}>
       <span>LFO Mixer</span>
       <div className={styles.controlls}>
         <div>

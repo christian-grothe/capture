@@ -1,7 +1,10 @@
-.controlls {
+.wrapper{
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items:center;
-  gap: 10px;
-  height: 80%;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-right: 25px;
+  gap: 70px;
 }

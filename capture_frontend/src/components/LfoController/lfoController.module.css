@@ -7,7 +7,7 @@
 .controlls {
   display: flex;
   justify-content: space-between;
-  gap:40px;
+  gap:80px;
   align-items: center;
   width: 100%;
   padding: 20px;
