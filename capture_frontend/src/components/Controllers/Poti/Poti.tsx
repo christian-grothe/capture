@@ -26,10 +26,10 @@ interface Props {
   modProps?: ModProps;
 }
 
-const Poti = ({ label, unit, min, max, value, callback, modProps }: Props) => {
+const Poti = ({ label, unit, min = 0, max = 1, value, callback, modProps }: Props) => {
   const [isActive, setIsActive] = useState(false);
   const startRef = useRef(0);
-  const currentVal = useRef(0);
+  const currentVal = useRef((value - min) / (max - min));
   const prevY = useRef(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,38 +39,34 @@ const Poti = ({ label, unit, min, max, value, callback, modProps }: Props) => {
     setIsActive(true);
   };
 
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!containerRef.current || !isActive) return;
+    const y = startRef.current - e.clientY;
+    const inc = 0.015;
+
+    if (y > prevY.current) {
+      currentVal.current += inc;
+    } else {
+      currentVal.current -= inc;
+    }
+    currentVal.current = Math.min(Math.max(currentVal.current, 0), 1);
+    prevY.current = y;
+
+    callback(currentVal.current * (max - min) + min);
+  };
+
+  const handleMouseUp = () => {
+    setIsActive(false);
+  };
+
   useEffect(() => {
+    currentVal.current = (value - min) / (max - min);
     if (!containerRef.current) return;
-    const rotation = value * 245 - 45;
+    const rotation = currentVal.current * 245 - 45;
     containerRef.current.style.transform = `rotate(${rotation}deg)`;
-    currentVal.current = value;
-  }, [value]);
+  }, [value, min, max]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current || !isActive) return;
-      const y = startRef.current - e.clientY;
-      const inc = 0.015;
-
-      if (y > prevY.current) {
-        currentVal.current += inc;
-      } else {
-        currentVal.current -= inc;
-      }
-      currentVal.current = Math.min(Math.max(currentVal.current, 0), 1);
-      prevY.current = y;
-
-      if (min !== undefined && max !== undefined) {
-        callback(currentVal.current * (max - min) + min);
-      } else {
-        callback(currentVal.current);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsActive(false);
-    };
-
     if (isActive) {
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
