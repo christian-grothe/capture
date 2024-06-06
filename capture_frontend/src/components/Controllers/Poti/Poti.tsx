@@ -2,16 +2,17 @@ import { useRef, useState, useEffect } from "react";
 import styles from "./poti.module.css";
 import ModDepth from "./ModDepth";
 import ModIndex from "./ModIndex";
+import WaveformSelect from "./WaveformSelect";
 
 interface ModProps {
   valueModDepth: number;
   callbackModDepth:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((val: number) => void);
+  | React.Dispatch<React.SetStateAction<number>>
+  | ((val: number) => void);
   valueModIndex: number;
   callbackModIndex:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((val: number) => void);
+  | React.Dispatch<React.SetStateAction<number>>
+  | ((val: number) => void);
 }
 
 interface Props {
@@ -20,14 +21,25 @@ interface Props {
   min?: number;
   max?: number;
   value: number;
+  waveformSelect?: number;
   callback:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((val: number) => void);
+  | React.Dispatch<React.SetStateAction<number>>
+  | ((val: number) => void);
   modProps?: ModProps;
 }
 
-const Poti = ({ label, unit, min = 0, max = 1, value, callback, modProps }: Props) => {
+const Poti = ({
+  label,
+  unit,
+  min = 0,
+  max = 1,
+  value,
+  waveformSelect,
+  callback,
+  modProps,
+}: Props) => {
   const [isActive, setIsActive] = useState(false);
+
   const startRef = useRef(0);
   const currentVal = useRef((value - min) / (max - min));
   const prevY = useRef(0);
@@ -37,6 +49,10 @@ const Poti = ({ label, unit, min = 0, max = 1, value, callback, modProps }: Prop
   const handleStart = (e: React.MouseEvent) => {
     startRef.current = e.clientY;
     setIsActive(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsActive(false);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -53,10 +69,6 @@ const Poti = ({ label, unit, min = 0, max = 1, value, callback, modProps }: Prop
     prevY.current = y;
 
     callback(currentVal.current * (max - min) + min);
-  };
-
-  const handleMouseUp = () => {
-    setIsActive(false);
   };
 
   useEffect(() => {
@@ -89,6 +101,9 @@ const Poti = ({ label, unit, min = 0, max = 1, value, callback, modProps }: Prop
       <span>
         {value.toFixed(2)} {unit}
       </span>
+      {waveformSelect !== undefined ? (
+        <WaveformSelect index={waveformSelect} />
+      ) : null}
       {modProps ? (
         <>
           <ModDepth

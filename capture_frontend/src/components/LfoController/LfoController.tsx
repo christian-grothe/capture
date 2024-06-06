@@ -7,6 +7,7 @@ import { useAppStore } from "../../store/useAppStore";
 
 const LfoController = () => {
   const sendMessage = useAppStore((state) => state.sendMessage);
+  const [vals, setVals] = useState([0, 0, 0, 0]);
 
   const [currentMix, setCurrentMix] = useState(0);
   const [mixes, setMixes] = useState([
@@ -50,8 +51,8 @@ const LfoController = () => {
             unit="Hz"
             min={0.05}
             max={10}
-            waveformSelect={true}
-            index={0}
+            waveformSelect={0}
+            value={vals[0]}
             callback={(val: number) => {
               sendMessage("lfoRate", { index: 0, val });
             }}
@@ -64,8 +65,8 @@ const LfoController = () => {
             unit="Hz"
             min={0.05}
             max={10}
-            waveformSelect
-            index={1}
+            waveformSelect={1}
+            value={vals[1]}
             callback={(val: number) => {
               sendMessage("lfoRate", { index: 1, val });
             }}
@@ -78,8 +79,8 @@ const LfoController = () => {
             unit="Hz"
             min={0.05}
             max={10}
-            waveformSelect
-            index={2}
+            waveformSelect={2}
+            value={vals[2]}
             callback={(val: number) => {
               sendMessage("lfoRate", { index: 2, val });
             }}
@@ -92,8 +93,8 @@ const LfoController = () => {
             unit="Hz"
             min={0.05}
             max={10}
-            waveformSelect
-            index={3}
+            waveformSelect={3}
+            value={vals[3]}
             callback={(val: number) => {
               sendMessage("lfoRate", { index: 3, val });
             }}

@@ -6,9 +6,11 @@ import NumberSelect from "../Controllers/NumberSelect/NumberSelect";
 import Toggle from "../Controllers/Toggle/Toggle";
 import Poti from "../Controllers/Poti/Poti";
 
-export const Keyboard = () => {
+const Keyboard = () => {
   const [baseNote, setBaseNote] = useState(60);
   const [isLatch, setIsLatch] = useState(false);
+  const [attack, setAttack] = useState(0.1);
+  const [release, setRelease] = useState(0.1);
 
   const changeOctave = (operation: "inc" | "dec") => {
     if (operation === "inc") {
@@ -34,8 +36,8 @@ export const Keyboard = () => {
           />
         </div>
         <div>
-          <Poti label={"Attack"} cmd={"setAttack"} />
-          <Poti label={"Release"} cmd={"setRelease"} />
+          <Poti label={"Attack"} value={attack} callback={setAttack} />
+          <Poti label={"Release"} value={release} callback={setRelease} />
         </div>
       </div>
       <div className={`${styles.keyboard} ${styles.blackRow}`}>
@@ -59,3 +61,5 @@ export const Keyboard = () => {
     </div>
   );
 };
+
+export default Keyboard

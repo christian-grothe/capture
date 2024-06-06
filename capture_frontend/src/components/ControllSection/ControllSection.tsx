@@ -31,6 +31,20 @@ const ControllSection = ({ index }: Props) => {
     { modIndex: 1, modDepth: 0 },
   ]);
 
+  const [speedMod, setSpeedMod] = useState([
+    { modIndex: 1, modDepth: 0 },
+    { modIndex: 1, modDepth: 0 },
+    { modIndex: 1, modDepth: 0 },
+    { modIndex: 1, modDepth: 0 },
+  ]);
+
+  const [gainMod, setGainMod] = useState([
+    { modIndex: 1, modDepth: 0 },
+    { modIndex: 1, modDepth: 0 },
+    { modIndex: 1, modDepth: 0 },
+    { modIndex: 1, modDepth: 0 },
+  ]);
+
   return (
     <div className={styles.wrapper}>
       <Poti
@@ -52,6 +66,7 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modIndex = val;
               return copy;
             });
+            sendMessage("grainDenseModIndex", { index, val });
           },
           valueModDepth: lengthMod[index].modDepth,
           callbackModDepth: (val: number) => {
@@ -60,6 +75,7 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modDepth = val;
               return copy;
             });
+            sendMessage("grainLengthModDepth", { index, val });
           },
         }}
       />
@@ -72,6 +88,27 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
+          sendMessage("setDensity", { index, val });
+        }}
+        modProps={{
+          valueModIndex: densityMod[index].modIndex,
+          callbackModIndex: (val: number) => {
+            setDensityMod((prev) => {
+              const copy = [...prev];
+              copy[index].modIndex = val;
+              return copy;
+            });
+            sendMessage("grainDenseModIndex", { index, val });
+          },
+          valueModDepth: densityMod[index].modDepth,
+          callbackModDepth: (val: number) => {
+            setDensityMod((prev) => {
+              const copy = [...prev];
+              copy[index].modDepth = val;
+              return copy;
+            });
+            sendMessage("grainDenseModDepth", { index, val });
+          },
         }}
       />
       <Poti
@@ -85,6 +122,27 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
+          sendMessage("setPlaySpeed", { index, val });
+        }}
+        modProps={{
+          valueModIndex: speedMod[index].modIndex,
+          callbackModIndex: (val: number) => {
+            setSpeedMod((prev) => {
+              const copy = [...prev];
+              copy[index].modIndex = val;
+              return copy;
+            });
+            sendMessage("playSpeedModIndex", { index, val });
+          },
+          valueModDepth: speedMod[index].modDepth,
+          callbackModDepth: (val: number) => {
+            setSpeedMod((prev) => {
+              const copy = [...prev];
+              copy[index].modDepth = val;
+              return copy;
+            });
+            sendMessage("playSpeedModDepth", { index, val });
+          },
         }}
       />
       <Poti
@@ -118,6 +176,27 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
+          sendMessage("setGain", { index, val });
+        }}
+        modProps={{
+          valueModIndex: gainMod[index].modIndex,
+          callbackModIndex: (val: number) => {
+            setGainMod((prev) => {
+              const copy = [...prev];
+              copy[index].modIndex = val;
+              return copy;
+            });
+            sendMessage("gainModIndex", { index, val });
+          },
+          valueModDepth: gainMod[index].modDepth,
+          callbackModDepth: (val: number) => {
+            setGainMod((prev) => {
+              const copy = [...prev];
+              copy[index].modDepth = val;
+              return copy;
+            });
+            sendMessage("gainModDepth", { index, val });
+          },
         }}
       />
     </div>
