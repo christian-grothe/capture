@@ -4,7 +4,7 @@ import { useState } from "react";
 
 interface Props {
   callback?: (operation: "inc" | "dec") => void;
-  label: string;
+  label?: string;
   min?: number;
   max?: number;
   initVal?: number;

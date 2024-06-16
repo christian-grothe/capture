@@ -56,7 +56,10 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
-          sendMessage("setGrainLength", { index, val });
+          sendMessage({
+            command: "setGrainLength",
+            data: { value: val, index },
+          });
         }}
         modProps={{
           valueModIndex: lengthMod[index].modIndex,
@@ -66,7 +69,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modIndex = val;
               return copy;
             });
-            sendMessage("grainDenseModIndex", { index, val });
+            sendMessage({
+              command: "setGrainLength",
+              data: { value: val, index },
+            });
           },
           valueModDepth: lengthMod[index].modDepth,
           callbackModDepth: (val: number) => {
@@ -88,7 +94,10 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
-          sendMessage("setDensity", { index, val });
+          sendMessage({
+            command: "setDensity",
+            data: { value: val, index },
+          });
         }}
         modProps={{
           valueModIndex: densityMod[index].modIndex,
@@ -122,7 +131,10 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
-          sendMessage("setPlaySpeed", { index, val });
+          sendMessage({
+            command: "setPlaySpeed",
+            data: { value: val, index },
+          });
         }}
         modProps={{
           valueModIndex: speedMod[index].modIndex,
@@ -154,6 +166,10 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
+          sendMessage({
+            command: "setSpray",
+            data: { value: val, index },
+          });
         }}
       />
       <Poti
@@ -164,6 +180,10 @@ const ControllSection = ({ index }: Props) => {
             const copy = [...prev];
             copy[index] = val;
             return copy;
+          });
+          sendMessage({
+            command: "setSpread",
+            data: { value: val, index },
           });
         }}
       />
@@ -176,7 +196,10 @@ const ControllSection = ({ index }: Props) => {
             copy[index] = val;
             return copy;
           });
-          sendMessage("setGain", { index, val });
+          sendMessage({
+            command: "setGain",
+            data: { value: val, index },
+          });
         }}
         modProps={{
           valueModIndex: gainMod[index].modIndex,

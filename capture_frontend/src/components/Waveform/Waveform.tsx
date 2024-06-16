@@ -91,29 +91,40 @@ const Waveform = ({ bufferToDraw, index }: Props) => {
       const loopLength =
         (endRef.current[index] - startRef.current[index]) /
         canvasRef.current.width;
-      sendMessage("setLoopLength", { val: loopLength, index });
-      sendMessage("setLoopStart", {
-        val: startRef.current[index] / canvasRef.current.width,
-        index,
+      sendMessage({
+        command: "setLoopLength",
+        data: { value: loopLength, index },
       });
-      setUpdate(x);
+      sendMessage({
+        command: "setLoopStart",
+        data: {
+          value: startRef.current[index] / canvasRef.current.width,
+          index,
+        },
+      });
     } else if (isEndDragging) {
       endRef.current[index] = x;
       const loopLength =
         (endRef.current[index] - startRef.current[index]) /
         canvasRef.current.width;
-      sendMessage("setLoopLength", { val: loopLength, index });
+      sendMessage({
+        command: "setLoopLength",
+        data: { value: loopLength, index },
+      });
       setUpdate(x);
     } else if (isDraggingLoop) {
       const diff = x - startRef.current[index] - distToStart;
       startRef.current[index] += diff;
       endRef.current[index] += diff;
-      sendMessage("setLoopStart", {
-        val: startRef.current[index] / canvasRef.current.width,
-        index,
+      sendMessage({
+        command: "setLoopLength",
+        data: {
+          value: startRef.current[index] / canvasRef.current.width,
+          index,
+        },
       });
-      setUpdate(x);
     }
+    setUpdate(x);
   };
 
   useEffect(() => {
@@ -133,7 +144,11 @@ const Waveform = ({ bufferToDraw, index }: Props) => {
   return (
     <div className={styles.canvasContainer} ref={wrapperRef}>
       <div className={styles.record}>
-        <button onClick={() => sendMessage("rec", index)}></button>
+        <button
+          onClick={() =>
+            sendMessage({ command: "rec", data: { value: index } })
+          }
+        ></button>
       </div>
       <canvas
         className={styles.canvas}

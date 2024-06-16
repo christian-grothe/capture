@@ -29,7 +29,7 @@ const Waveforms = () => {
   }, [captureNode]);
 
   return (
-    <div className="container flex-column gap">
+    <div className="container grow flex-column gap">
       <div className={styles.thumbnailContainer}>
         {buffersToDraw.current.map((buffer, i) => (
           <Thumbnail

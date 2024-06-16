@@ -21,7 +21,7 @@ const Keyboard = () => {
   };
 
   return (
-    <div className={"container"}>
+    <div className={"container grow"}>
       <div className={styles.toolbar}>
         <div>
           <NumberSelect

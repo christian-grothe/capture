@@ -14,9 +14,16 @@
 .controls {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 17px;
+  position: relative;
 }
 
 .controls span{
+  top: 40%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
   position: absolute;
 }

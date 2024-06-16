@@ -28,8 +28,10 @@ public:
   void setSpray(float sprayFactor_);
   void setSpread(float spreadFactor_);
 
-  void setLoopStart(float loopStart, uint8_t bufIndex);
-  void setLoopEnd(float loopEnd, uint8_t bufIndex);
+  void setLoopStart(float loopStart);
+  void setLoopLength(float loopLength);
+
+  void setGain(float gain_);
 
   void record();
 
@@ -58,6 +60,7 @@ public:
   float grainLengthModDepth{0.0f};
   float grainDenseModDepth{0.0f};
   float playSpeedModDepth{0.0f};
+  float gainModDepth{0.0f};
   float delayTimeModDepth{0.0f};
   float delayLazynessModDepth{0.0f};
   float delayInputModDepth{0.0f};
@@ -65,6 +68,7 @@ public:
   uint8_t grainDenseModIndex{0};
   uint8_t grainLengthModIndex{0};
   uint8_t playSpeedModIndex{0};
+  uint8_t gainModIndex{0};
   uint8_t delayTimeModIndex{0};
   uint8_t delayLazynessModIndex{0};
   uint8_t delayInputModIndex{0};

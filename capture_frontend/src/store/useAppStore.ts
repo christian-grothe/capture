@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Commands, ModCommands } from "../types/types";
+import { Message } from "../types/types";
 
 interface UseAppStore {
   audioCtx: AudioContext | undefined;
@@ -7,8 +7,8 @@ interface UseAppStore {
   sourceNode: MediaStreamAudioSourceNode | undefined;
   audioBufferSize: number;
   bufferToDraw: Array<number>;
-  init: () => void;
-  sendMessage: (cmd: Commands | ModCommands, val?: any) => void;
+  init: (data: Message) => void;
+  sendMessage: (data: Message) => void;
 }
 
 export const useAppStore = create<UseAppStore>((set, get) => {
@@ -18,9 +18,8 @@ export const useAppStore = create<UseAppStore>((set, get) => {
     sourceNode: undefined,
     bufferToDraw: [],
     audioBufferSize: 0,
-    init: async () => {
+    init: async (data: Message) => {
       if (get().audioCtx) return;
-      console.log("init");
       const audioCtx = new AudioContext();
       set({ audioCtx });
 
@@ -30,10 +29,18 @@ export const useAppStore = create<UseAppStore>((set, get) => {
         outputChannelCount: [2],
       });
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+      const constraints={
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: 2,
+        },
         video: false,
-      });
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
       const sourceNode = audioCtx.createMediaStreamSource(stream);
 
       sourceNode.connect(captureNode);
@@ -41,14 +48,15 @@ export const useAppStore = create<UseAppStore>((set, get) => {
 
       audioCtx.resume();
 
+      captureNode.port.postMessage(data);
       set({ captureNode, sourceNode });
     },
-    sendMessage: (cmd: Commands | ModCommands, val?: any) => {
+    sendMessage: async (data: Message) => {
       const captureNode = get().captureNode;
       if (!captureNode) {
-        get().init();
+        get().init(data);
       } else {
-        captureNode.port.postMessage({ cmd, val });
+        captureNode.port.postMessage(data);
       }
     },
   };

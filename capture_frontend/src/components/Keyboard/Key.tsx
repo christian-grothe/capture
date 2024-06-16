@@ -10,22 +10,24 @@ export const Key = ({ midiNote, isLatch }: Props) => {
   const sendMessage = useAppStore((state) => state.sendMessage);
   const [currentNote, setCurrentNote] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [hasInteraction, setHasInteraction]= useState<boolean>(false);
 
   useEffect(() => {
-    if (!isLatch) {
+    if (!isLatch && hasInteraction) {
       setIsActive(false);
       setCurrentNote(0);
-      sendMessage("stopNote", currentNote);
+      sendMessage({ command: "stopNote", data: { value: currentNote } });
     }
   }, [isLatch]);
 
   const handlePlay = () => {
+    setHasInteraction(true);
     if (isLatch && isActive) {
-      sendMessage("stopNote", currentNote);
+      sendMessage({ command: "stopNote", data: { value: currentNote } });
       setCurrentNote(0);
       setIsActive(false);
     } else {
-      sendMessage("playNote", midiNote);
+      sendMessage({ command: "playNote", data: { value: midiNote } });
       setCurrentNote(midiNote);
       setIsActive(true);
     }
@@ -33,7 +35,7 @@ export const Key = ({ midiNote, isLatch }: Props) => {
 
   const stopPlaying = () => {
     if (isLatch) return;
-    sendMessage("stopNote", midiNote);
+    sendMessage({ command: "stopNote", data: { value: midiNote } });
     setCurrentNote(0);
     setIsActive(false);
   };

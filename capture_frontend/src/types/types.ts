@@ -8,7 +8,6 @@ type GrainCommands =
   | "setPlaySpeed"
   | "setGain";
 
-
 type DelayCommands =
   | "setDelaytime"
   | "setDelayFeedback"
@@ -43,20 +42,24 @@ export type Commands =
   | "stopNote"
   | "playNote"
   | "rec"
-  | "getAudioData"
-  | "getBufferSize"
-  | "getBufferPtr"
   | GrainCommands
   | DelayCommands
   | LfoCommands;
 
-export interface Controller {
-  label: string;
-  cmd: Commands;
-  min?: number;
-  max?: number;
-  modCmd?: ModCommands;
-  modIdCmd?: ModCommands;
+interface RegularData {
+  value: number | Waveform
+  index?: number,
+}
+
+interface LfoCtlData {
+  mixIndex: number,
+  modIndex: number,
+  depth: number
+}
+
+export interface Message {
+  command: Commands;
+  data: RegularData | LfoCtlData; 
 }
 
 export enum Waveform {

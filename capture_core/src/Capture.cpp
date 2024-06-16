@@ -1,25 +1,35 @@
 #include "Capture.h"
 
 // Granular Setters
-void Capture::setGrainLength(float grainLength_, int bufIndex) {
-  synths[bufIndex].setGrainLength(grainLength_);
+void Capture::setGrainLength(float grainLength_, int index) {
+  synths[index].setGrainLength(grainLength_);
 }
 
-void Capture::setPlaySpeed(float playSpeed_, int bufIndex) {
-  synths[bufIndex].setPlaySpeed(playSpeed_);
+void Capture::setPlaySpeed(float playSpeed_, int index) {
+  synths[index].setPlaySpeed(playSpeed_);
 }
 
-void Capture::setDensity(float density_, int bufIndex) {
-  synths[bufIndex].setDensity(density_);
+void Capture::setDensity(float density_, int index) {
+  synths[index].setDensity(density_);
 }
 
-void Capture::setSpray(float sprayFactor_, int bufIndex) {
-  synths[bufIndex].setSpray(sprayFactor_);
+void Capture::setSpray(float sprayFactor_, int index) {
+  synths[index].setSpray(sprayFactor_);
 }
 
-void Capture::setSpread(float spreadFactor_, int bufIndex) {
-  synths[bufIndex].setSpread(spreadFactor_);
+void Capture::setSpread(float spreadFactor_, int index) {
+  synths[index].setSpread(spreadFactor_);
 }
+
+void Capture::setLoopStart(float loopStart, int index) {
+  synths[index].setLoopStart(loopStart);
+}
+
+void Capture::setLoopLength(float loopLength, int index) {
+  synths[index].setLoopLength(loopLength);
+}
+
+void Capture::setGain(float gain_, int index) { synths[index].setGain(gain_); }
 
 // Delay Setters
 void Capture::setDelaytime(float delaytime) { delay.setDelaytime(delaytime); }
@@ -36,6 +46,49 @@ void Capture::setDelayInputGain(float inputGain) {
 
 void Capture::setDelayOutputGain(float outputGain) {
   delay.setOutputGain(outputGain);
+}
+
+// Modulation Setters
+void Capture::setGrainLengthModDepth(float grainLengthModDepth,
+                                     int synthIndex) {
+  synths[synthIndex].grainLengthModDepth = grainLengthModDepth;
+}
+void Capture::setGrainDenseModDepth(float grainDensModDepth, int synthIndex) {
+  synths[synthIndex].grainDenseModDepth = grainDensModDepth;
+}
+void Capture::setPlaySpeedModDepth(float playSpeedModDepth, int synthIndex) {
+  synths[synthIndex].playSpeedModDepth = playSpeedModDepth;
+}
+void Capture::setGainModDepth(float gainModDepth, int synthIndex) {
+  synths[synthIndex].gainModDepth = gainModDepth;
+}
+void Capture::setDelayTimeModDepth(float delayTimeModDepth) {
+  delay.delayTimeModDepth = delayTimeModDepth;
+}
+void Capture::setDelayLazynessModDepth(float delayLazynessModDepth) {}
+void Capture::setDelayInputModDepth(float delayInputModDepth) {
+  delay.delayInputModDepth = delayInputModDepth;
+}
+
+void Capture::setGrainLengthModindex(float grainLengthModIndex,
+                                     int synthIndex) {
+  synths[synthIndex].grainLengthModIndex = grainLengthModIndex;
+}
+void Capture::setGrainDenseModIndex(float grainDensModIndex, int synthIndex) {
+  synths[synthIndex].grainDenseModIndex = grainDensModIndex
+}
+void Capture::setPlaySpeedModIndex(float playSpeedModIndex, int synthIndex) {
+  synths[synthIndex].playSpeedModDepth = playSpeedModIndex;
+}
+void Capture::setGainModIndex(float gainModIndex, int synthIndex) {
+  synths[synthIndex].gainModIndex = gainModIndex;
+}
+void Capture::setDelayTimeModIndex(float delayTimeModIndex) {
+  delay.delayTimeModIndex = delayTimeModIndex;
+}
+void Capture::setDelayLazynessModIndex(float delayLazynessModIndex) {}
+void Capture::setDelayInputModIndex(float delayInputModIndex) {
+  delay.delayInputModIndex = delayInputModIndex;
 }
 
 void Capture::init(int totalChannelNum, int bufferSize, float sampleRate_) {
@@ -59,9 +112,9 @@ void Capture::stopPlaying(int midiNote) {
   }
 }
 
-void Capture::record(int bufIndex) { synths[bufIndex].record(); }
+void Capture::record(int index) { synths[index].record(); }
 
-bool Capture::isRecording(int bufIndex) { return synths[bufIndex].isRecording; }
+bool Capture::isRecording(int index) { return synths[index].isRecording; }
 
 void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
 
@@ -81,7 +134,7 @@ void Capture::render(const float *readPtr, float **writePtrs, int numSamples) {
     }
 
     output *= 0.5;
-    output += delay.render(output);
+    // output += delay.render(output);
 
     writePtrs[0][sample] += output.left;
     writePtrs[1][sample] += output.right;

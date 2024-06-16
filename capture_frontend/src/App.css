@@ -24,16 +24,18 @@ body {
 
 .section {
   display: flex;
-  margin: 10px;
+  margin: 5px;
 }
 
 .grow {
   flex-grow: 1;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .center {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -48,8 +50,17 @@ body {
   border: none;
 }
 
+.margin-top-bottom {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 .gap {
   gap: 10px;
+}
+
+.large-gap {
+  gap: 50px;
 }
 
 .flex-row {
