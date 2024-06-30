@@ -101,6 +101,8 @@ void Voice::activateGrain() {
       maxGrainLength);
 
   if (grainTriggerInc++ >= grainTriggerRate + grainDensModInc) {
+    synth->modMixer->getCurrentSample(0, 1);
+
     float spray = random.nextSample() * sprayFactor;
     for (int grain = 0; grain < GRAIN_NUMS; grain++) {
       if (!grains[grain].isActive()) {

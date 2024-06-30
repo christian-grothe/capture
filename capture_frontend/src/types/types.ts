@@ -8,32 +8,32 @@ type GrainCommands =
   | "setPlaySpeed"
   | "setGain";
 
-
 type DelayCommands =
   | "setDelaytime"
   | "setDelayFeedback"
-  | "setInterpolationTime"
+  | "setDelayInterpolationTime"
   | "setDelayInputGain"
-  | "setDelayOutputGain";
-
-type LfoCommands = "lfoRate" | "setWaveform" | "setMixDepth";
+  | "setDelayOutputGain"
+  | "setDelayColor";
 
 export type ModCommands =
-  | "grainLengthModDepth"
-  | "grainDenseModDepth"
-  | "playSpeedModDepth"
-  | "delayTimeModDepth"
-  | "delayLazynessModDepth"
-  | "delayInputModDepth"
-  | "gainModDepth"
-  | "grainDenseModIndex"
-  | "grainLengthModIndex"
-  | "playSpeedModIndex"
-  | "delayTimeModIndex"
-  | "delayLazynessModIndex"
-  | "delayInputModIndex"
+  | "setGrainLengthModDepth"
+  | "setGrainDenseModDepth"
+  | "setPlaySpeedModDepth"
+  | "setDelaytimeModDepth"
+  | "setDelayInputGainModDepth"
+  | "setDelayOutputGainModDepth"
+  | "setGainModDepth"
+  | "setGrainDenseModIndex"
+  | "setGrainLengthModIndex"
+  | "setPlaySpeedModIndex"
+  | "setDelaytimeModIndex"
+  | "setDelayInputGainModIndex"
+  | "setDelayOutputGainModIndex"
+  | "setGainModIndex"
   | "setModFreq"
-  | "gainModIndex";
+  | "setModType"
+  | "setModDepth";
 
 export type Commands =
   | "setLoopStart"
@@ -43,20 +43,24 @@ export type Commands =
   | "stopNote"
   | "playNote"
   | "rec"
-  | "getAudioData"
-  | "getBufferSize"
-  | "getBufferPtr"
   | GrainCommands
   | DelayCommands
-  | LfoCommands;
+  | ModCommands;
 
-export interface Controller {
-  label: string;
-  cmd: Commands;
-  min?: number;
-  max?: number;
-  modCmd?: ModCommands;
-  modIdCmd?: ModCommands;
+interface RegularData {
+  value: number | Waveform;
+  index?: number;
+}
+
+interface LfoCtlData {
+  mixIndex: number;
+  modIndex: number;
+  depth: number;
+}
+
+export interface Message {
+  command: Commands;
+  data: RegularData | LfoCtlData;
 }
 
 export enum Waveform {

@@ -17,13 +17,24 @@ Utils::Signal Delay::render(Utils::Signal input) {
   return nextSample();
 }
 
+void Delay::setDelayColor(float color_) {
+  filterL.setAlpha(color_);
+  filterR.setAlpha(color_);
+}
+
 void Delay::write(Utils::Signal input) {
-  float modInc = modMixer->getModulationIncrement(
+  float inputGainModInc = modMixer->getModulationIncrement(
       delayInputModIndex, delayInputModDepth, inputGain, 1.0f);
+
+  float feedbackSamleL = bufferL[readPos] * feedback;
+  float feedbackSamleR = bufferR[readPos] * feedback;
+  float filteredFeedbackL = filterL.next(feedbackSamleL);
+  float filteredFeedbackR = filterR.next(feedbackSamleR);
+
   bufferL[writePos] =
-      (input.left * (inputGain + modInc)) + (bufferL[readPos] * feedback);
+      (input.left * (inputGain + inputGainModInc)) + filteredFeedbackL;
   bufferR[writePos] =
-      (input.right * (inputGain + modInc)) + (bufferR[readPos] * feedback);
+      (input.right * (inputGain + inputGainModInc)) + filteredFeedbackR;
 
   if (++writePos >= bufferSize) {
     writePos = 0.0f;
@@ -56,7 +67,10 @@ Utils::Signal Delay::nextSample() {
   output.left = sampleL;
   output.right = sampleR;
 
-  output *= outputGain;
+  float delayOutputModInc = modMixer->getModulationIncrement(
+      delayOutputModIndex, delayOutputModDepth, outputGain, 1.0f);
+
+  output *= outputGain + delayOutputModInc;
 
   return output;
 }

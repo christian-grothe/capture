@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
 import styles from "./modIndex.module.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useAppStore } from "../../../store/useAppStore";
-import { ModCommands } from "../../../types/types";
 
 interface Props {
   min?: number;
   max?: number;
-  cmd: ModCommands;
+  callback:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((val: number) => void);
+  value: number;
 }
 
-const ModIndex = ({ min, max, cmd }: Props) => {
-  const [value, setValue] = useState(1);
-  const sendMessage = useAppStore((state) => state.sendMessage);
-
+const ModIndex = ({ min, max, callback, value }: Props) => {
   const handleClick = (operation: "inc" | "dec") => {
     if (
       (min && value === min && operation === "dec") ||
@@ -21,15 +18,12 @@ const ModIndex = ({ min, max, cmd }: Props) => {
     )
       return;
     if (operation === "inc") {
-      setValue((prev) => prev + 1);
+      callback(value + 1);
     } else {
-      setValue((prev) => prev - 1);
+      callback(value - 1);
     }
   };
 
-  useEffect(() => {
-    sendMessage(cmd, value - 1);
-  }, [value]);
 
   return (
     <div className={styles.wrapper}>

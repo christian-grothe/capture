@@ -1,14 +1,16 @@
 import { create } from "zustand";
-import { Commands, ModCommands } from "../types/types";
+import { Message } from "../types/types";
 
 interface UseAppStore {
   audioCtx: AudioContext | undefined;
   captureNode: AudioWorkletNode | undefined;
   sourceNode: MediaStreamAudioSourceNode | undefined;
+  inputAnalyserNode: AnalyserNode | undefined;
+  outputAnalyserNode: AnalyserNode | undefined;
   audioBufferSize: number;
   bufferToDraw: Array<number>;
-  init: () => void;
-  sendMessage: (cmd: Commands | ModCommands, val?: any) => void;
+  init: (data: Message) => void;
+  sendMessage: (data: Message) => void;
 }
 
 export const useAppStore = create<UseAppStore>((set, get) => {
@@ -16,11 +18,12 @@ export const useAppStore = create<UseAppStore>((set, get) => {
     audioCtx: undefined,
     captureNode: undefined,
     sourceNode: undefined,
+    inputAnalyserNode: undefined,
+    outputAnalyserNode: undefined,
     bufferToDraw: [],
     audioBufferSize: 0,
-    init: async () => {
+    init: async (data: Message) => {
       if (get().audioCtx) return;
-      console.log("init");
       const audioCtx = new AudioContext();
       set({ audioCtx });
 
@@ -30,25 +33,40 @@ export const useAppStore = create<UseAppStore>((set, get) => {
         outputChannelCount: [2],
       });
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+      const constraints = {
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: 2,
+        },
         video: false,
-      });
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
       const sourceNode = audioCtx.createMediaStreamSource(stream);
+
+      const inputAnalyserNode = audioCtx.createAnalyser();
+      const outputAnalyserNode = audioCtx.createAnalyser();
 
       sourceNode.connect(captureNode);
       captureNode.connect(audioCtx.destination);
 
+      sourceNode.connect(inputAnalyserNode);
+      captureNode.connect(outputAnalyserNode);
+
       audioCtx.resume();
 
-      set({ captureNode, sourceNode });
+      captureNode.port.postMessage(data);
+      set({ captureNode, sourceNode, inputAnalyserNode, outputAnalyserNode });
     },
-    sendMessage: (cmd: Commands | ModCommands, val?: any) => {
+    sendMessage: async (data: Message) => {
       const captureNode = get().captureNode;
       if (!captureNode) {
-        get().init();
+        get().init(data);
       } else {
-        captureNode.port.postMessage({ cmd, val });
+        captureNode.port.postMessage(data);
       }
     },
   };

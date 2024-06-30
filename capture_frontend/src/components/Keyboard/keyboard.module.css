@@ -18,6 +18,10 @@
   cursor: pointer;
   background-color: #242424;
   transition: background-color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 5px;
 }
 
 .active {
@@ -37,6 +41,8 @@
 }
 
 .toolbar {
+  width: 100%;
+  margin-bottom: -40px;
   display: flex;
   justify-content: space-between;
 }

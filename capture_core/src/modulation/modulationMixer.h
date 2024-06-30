@@ -12,7 +12,7 @@ public:
         setMixDepth(mix, mod, 0.0f);
       }
     }
-    mods[0].setModulationType(Modulator::ModulationType::Noise);
+    mods[0].setModulationType(Modulator::ModulationType::Square);
     mods[1].setModulationType(Modulator::ModulationType::Saw);
     mods[2].setModulationType(Modulator::ModulationType::Square);
     mods[3].setModulationType(Modulator::ModulationType::Sine);
@@ -28,7 +28,7 @@ public:
   float getCurrentSample(uint8_t mixIndex, float depth, float offset = 1.0f) {
     float sample = 0.0f;
     for (int i = 0; i < MOD_NUM; i++) {
-      sample += mods[i].currentSample * mixes[mixIndex][i];
+      sample += mods[i].getCurrentSample(mixes[mixIndex][i]);
     }
     return (sample * depth) + offset;
   }
@@ -48,7 +48,6 @@ public:
   void setModType(int modIndex, Modulator::ModulationType newType) {
     mods[modIndex].setModulationType(newType);
   }
-
 
   void normalize() {
     for (int mixIndex = 0; mixIndex < MIX_NUM; mixIndex++) {

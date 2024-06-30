@@ -18,6 +18,7 @@ const WaveformSelect = ({ index }: Props) => {
   const [currentWaveform, setCurrentWaveform] = useState<Waveform>(
     Waveform.Sine,
   );
+  const [hasInteraction, setHasInteraction] = useState<boolean>(false);
   const [icons] = useState([
     PiWaveSineLight,
     PiWaveSawtoothLight,
@@ -26,6 +27,7 @@ const WaveformSelect = ({ index }: Props) => {
   ]);
 
   const handleClick = (operation: "inc" | "dec") => {
+    setHasInteraction(true);
     if (currentWaveform === 0 && operation === "dec") {
       setCurrentWaveform(icons.length - 1);
       return;
@@ -42,7 +44,11 @@ const WaveformSelect = ({ index }: Props) => {
   };
 
   useEffect(() => {
-    sendMessage("setWaveform", { waveform: currentWaveform, index });
+    if (!hasInteraction) return;
+    sendMessage({
+      command: "setModType",
+      data: { index, value: currentWaveform },
+    });
   }, [currentWaveform]);
 
   return (

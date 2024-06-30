@@ -24,17 +24,24 @@ body {
 
 .section {
   display: flex;
-  margin: 10px;
+  margin: 5px;
 }
 
 .grow {
   flex-grow: 1;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .center {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.between {
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -44,18 +51,31 @@ body {
   padding: 15px;
 }
 
+.small-container {
+  border: 1px solid;
+  border-radius: 15px;
+  padding: 5px 20px;
+}
+
 .no-border {
   border: none;
+}
+
+.margin-top-bottom {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .gap {
   gap: 10px;
 }
 
+.large-gap {
+  gap: 50px;
+}
+
 .flex-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
 }
 
@@ -63,4 +83,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
 }

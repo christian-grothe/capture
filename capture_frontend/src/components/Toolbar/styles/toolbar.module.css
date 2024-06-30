@@ -1,0 +1,19 @@
+.wrapper{
+  height: 30px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap:10px;
+  font-weight: bold;
+}
+
+.wrapper canvas{
+  height: 100%;
+  width: 100%;
+}
+
+.wrapper span{
+  font-size: 1rem;
+  color:var(--text-color);
+}

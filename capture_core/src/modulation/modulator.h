@@ -13,7 +13,7 @@ public:
   void init(int sampleRate_) {
     modulationType = ModulationType::Sine;
     sampleRate = sampleRate_;
-    float inc = (1.0f / sampleRate) * 0.5;
+    float inc = (1.0f / sampleRate) * 1.0;
     saw.setInc(inc);
     noise.setInc(inc);
     square.setInc(inc);
@@ -52,7 +52,9 @@ public:
     currentSample = nextSample;
   }
 
-  float getCurrentSample(float depth) { return (currentSample * depth) + 1.0f; }
+  const float getCurrentSample(const float depth, float offset = 1.0f) {  
+    return (currentSample * depth);
+  }
   float currentSample;
 
 private:
