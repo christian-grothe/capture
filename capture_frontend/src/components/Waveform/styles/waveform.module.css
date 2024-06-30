@@ -6,6 +6,7 @@
 }
 
 .canvasContainer {
+  margin: 5px;
   position: relative;
   width: 100%;
   height: 125px;
@@ -45,4 +46,30 @@
   padding: 10px;
   cursor: pointer;
   z-index: 1;
+}
+
+.thumbnailContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.thumbnail {
+  flex-grow: 1;
+  height: 50px;
+  border: 1px solid var(--white);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.selected {
+  border: 1px solid var(--fill);
+}
+
+.thumbnail canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }

@@ -47,7 +47,7 @@ void Voice::init(int totalChannelNum, int bufferSize, float sampleRate_,
 
   pitch = 1.0f;
   sprayFactor = 0.0f;
-  spreadFactor = 1.0f;
+  spreadFactor = 0.5f;
 
   loopStart = 0.0f;
   loopLength = 1.0f;
@@ -69,7 +69,7 @@ Utils::Signal Voice::render() {
 }
 
 inline void Voice::setPlayHead() {
-  float playSpeedModInc = synth->modMixer.getModulationIncrement(
+  float playSpeedModInc = synth->modMixer->getModulationIncrement(
       synth->playSpeedModIndex, synth->playSpeedModDepth, playHeadInc,
       (1 / loopBufferSize) * 4);
   float playHeadNew;
@@ -93,10 +93,10 @@ inline void Voice::setPlayHead() {
 }
 
 void Voice::activateGrain() {
-  float grainDensModInc = synth->modMixer.getModulationIncrement(
+  float grainDensModInc = synth->modMixer->getModulationIncrement(
       synth->grainDenseModIndex, synth->grainDenseModDepth, grainTriggerRate,
       sampleRate);
-  float grainLengthModInc = synth->modMixer.getModulationIncrement(
+  float grainLengthModInc = synth->modMixer->getModulationIncrement(
       synth->grainLengthModIndex, synth->grainLengthModDepth, grainLength,
       maxGrainLength);
 

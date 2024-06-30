@@ -3,15 +3,13 @@ import Poti from "../Controllers/Poti/Poti";
 import styles from "./controllSection.module.css";
 
 interface Props {
-  label: string;
+  label?: string;
   controllers: Controller[];
 }
 
-const ControllSection = ({ label, controllers }: Props) => {
+const ControllSection = ({controllers }: Props) => {
   return (
-    <div className={"container grow"}>
-      <span>{label}</span>
-      <div className={styles.controlls}>
+    <div className={styles.wrapper}>
         {controllers.map((controller) => (
           <Poti
             key={controller.cmd}
@@ -23,7 +21,6 @@ const ControllSection = ({ label, controllers }: Props) => {
             max={controller.max}
           />
         ))}
-      </div>
     </div>
   );
 };

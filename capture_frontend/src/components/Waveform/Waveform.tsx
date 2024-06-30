@@ -2,30 +2,32 @@ import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "../../store/useAppStore";
 import styles from "./styles/waveform.module.css";
 
-const Waveform = () => {
+interface Props {
+  bufferToDraw: number[];
+  index: number;
+}
+const Waveform = ({ bufferToDraw, index  }: Props) => {
   const sendMessage = useAppStore((state) => state.sendMessage);
-  const captureNode = useAppStore((state) => state.captureNode);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
-  const bufferToDraw = useRef<number[]>(new Array(129).fill(0.01));
   const startRef = useRef(0);
   const endRef = useRef(0);
   const [isStartDragging, setIsStartDragging] = useState(false);
   const [isEndDragging, setIsEndDragging] = useState(false);
   const [isDraggingLoop, setIsDraggingLoop] = useState(false);
   const [update, setUpdate] = useState(0);
-const[distToStart,setDistToStart] = useState(0)
+  const [distToStart, setDistToStart] = useState(0);
 
   const createContext = () => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !wrapperRef.current) return;
     const canvas = canvasRef.current;
     const context = canvasRef.current.getContext(
       "2d",
     ) as CanvasRenderingContext2D;
 
-    canvas.width = wrapperRef.current?.clientWidth || 400;
-    canvas.height = wrapperRef.current?.clientHeight || 80;
+    canvas.width = wrapperRef.current.clientWidth;
+    canvas.height = wrapperRef.current.clientHeight;
     context.strokeStyle = "white";
     context.lineWidth = 0.5;
     startRef.current = canvas.width * 0.15;
@@ -40,11 +42,11 @@ const[distToStart,setDistToStart] = useState(0)
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     const canvasBaseline = canvasRef.current.height / 2;
 
-    for (let i = 0; i < bufferToDraw.current.length; i++) {
-      const bar = bufferToDraw.current[i];
+    for (let i = 0; i < bufferToDraw.length; i++) {
+      const bar = bufferToDraw[i];
 
       const height = bar * canvasRef.current.height;
-      const x = (i / bufferToDraw.current.length) * canvasRef.current.width;
+      const x = (i / bufferToDraw.length) * canvasRef.current.width;
       const y = canvasBaseline - height / 2;
 
       context.fillRect(x, y, 2, height);
@@ -72,7 +74,7 @@ const[distToStart,setDistToStart] = useState(0)
       setIsEndDragging(true);
     } else if (x > startRef.current && x < endRef.current) {
       setIsDraggingLoop(true);
-      setDistToStart(x-startRef.current)
+      setDistToStart(x - startRef.current);
     }
   };
 
@@ -86,18 +88,20 @@ const[distToStart,setDistToStart] = useState(0)
         (endRef.current - startRef.current) / canvasRef.current.width;
       sendMessage("setLoopLength", loopLength);
       sendMessage("setLoopStart", startRef.current / canvasRef.current.width);
+      setUpdate(x);
     } else if (isEndDragging) {
       endRef.current = x;
       const loopLength =
         (endRef.current - startRef.current) / canvasRef.current.width;
       sendMessage("setLoopLength", loopLength);
+      setUpdate(x);
     } else if (isDraggingLoop) {
       const diff = x - startRef.current - distToStart;
       startRef.current += diff;
       endRef.current += diff;
       sendMessage("setLoopStart", startRef.current / canvasRef.current.width);
+      setUpdate(x);
     }
-    setUpdate(x);
   };
 
   useEffect(() => {
@@ -107,38 +111,24 @@ const[distToStart,setDistToStart] = useState(0)
       setIsEndDragging(false);
       setIsDraggingLoop(false);
     });
-
-    if (!captureNode) return;
-    captureNode.port.onmessage = (event) => {
-      switch (event.data.cmd) {
-        case "audioData":
-          bufferToDraw.current[event.data.index] = event.data.val;
-          draw();
-          break;
-        default:
-          break;
-      }
-    };
-  }, [captureNode]);
+  }, []);
 
   useEffect(() => {
     if (!context) return;
     draw();
-  }, [context, update]);
+  }, [context, update, bufferToDraw]);
 
   return (
-    <div className={"container grow"}>
-      <div className={styles.canvasContainer} ref={wrapperRef}>
-        <div className={styles.record}>
-          <button onClick={() => sendMessage("rec")}></button>
-        </div>
-        <canvas
-          className={styles.canvas}
-          ref={canvasRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-        />
+    <div className={styles.canvasContainer} ref={wrapperRef}>
+      <div className={styles.record}>
+        <button onClick={() => sendMessage("rec", index)}></button>
       </div>
+      <canvas
+        className={styles.canvas}
+        ref={canvasRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+      />
     </div>
   );
 };

@@ -2,11 +2,50 @@ import Module from "./capture.wasm.js";
 import HeapAudioBuffer from "./AudioHeap.js";
 
 const NUM_FRAMES = 128;
+
+class BufferToDraw {
+  constructor(bufIndex, bufferSize, samplesPerBar, processor) {
+    this.bufIndex = bufIndex;
+    this.buffer = new Float32Array(bufferSize).fill(0);
+    this.currentSampleSum = 0;
+    this.currentIndex = 0;
+    this.currentSample = 0;
+    this.samplesPerBar = samplesPerBar;
+    this.processor = processor;
+  }
+
+  addSample(sample) {
+    this.currentSampleSum += Math.abs(sample);
+    this.currentSample++;
+    if (this.currentSample >= this.samplesPerBar) {
+      const average = this.currentSampleSum / this.samplesPerBar;
+      this.buffer[this.currentIndex] = average;
+      this.currentIndex++;
+      this.currentSampleSum = 0;
+      this.currentSample = 0;
+      this.postMessage();
+    }
+  }
+
+  postMessage() {
+    this.processor.port.postMessage({
+      cmd: "audioData",
+      data: this.buffer,
+      bufIndex: this.bufIndex,
+    });
+  }
+
+  reset() {
+    this.currentSampleSum = 0;
+    this.currentSample = 0;
+    this.currentIndex = 0;
+  }
+}
+
 export class CaptureProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
-    this._synth = new Module.Synth();
-    this.sampleRate = sampleRate;
+    this._capture = new Module.Capture();
     this.audioBufferSizeSec = 10;
     this.audioBufferSize = this.audioBufferSizeSec * sampleRate;
     this._heapInputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
@@ -47,13 +86,9 @@ export class CaptureProcessor extends AudioWorkletProcessor {
           });
         }
       }
-    } else {
-      this.currentSampleSum = 0;
-      this.currentIndex = 0;
-      this.currentSample = 0;
     }
 
-    this._synth.render(
+    this._capture.render(
       this._heapInputBuffer.getHeapAddress(),
       this._heapOutputBuffer.getHeapAddress(),
       NUM_FRAMES,
@@ -67,76 +102,13 @@ export class CaptureProcessor extends AudioWorkletProcessor {
   handleMessage(event) {
     switch (event.data.cmd) {
       case "rec":
-        this._synth.record();
+        this._capture.record(event.data.val);
         break;
       case "playNote":
-        this._synth.startPlaying(event.data.val);
+        this._capture.startPlaying(event.data.val);
         break;
       case "stopNote":
-        this._synth.stopPlaying(event.data.val);
-        break;
-      case "setGrainLength":
-        this._synth.setGrainLength(event.data.val);
-        break;
-      case "setDensity":
-        this._synth.setDensity(event.data.val);
-        break;
-      case "setPlaySpeed":
-        this._synth.setPlaySpeed(event.data.val);
-        break;
-      case "setSpray":
-        this._synth.setSpray(event.data.val);
-        break;
-      case "setSpread":
-        this._synth.setSpread(event.data.val);
-        break;
-      case "setDelaytime":
-        this._synth.setDelaytime(event.data.val);
-        break;
-      case "setDelayFeedback":
-        this._synth.setDelayFeedback(event.data.val);
-        break;
-      case "setInterpolationTime":
-        this._synth.setInterpolationTime(event.data.val);
-        break;
-      case "setDelayInputGain":
-        this._synth.setDelayInputGain(event.data.val);
-        break;
-      case "setDelayOutputGain":
-        this._synth.setDelayOutputGain(event.data.val);
-        break;
-      case "setMixDepth":
-        this._synth.setMixDepth(
-          event.data.val.mixIndex,
-          event.data.val.modIndex,
-          event.data.val.depth,
-        );
-        break;
-      case "grainLengthModDepth":
-      case "grainDenseModDepth":
-      case "playSpeedModDepth":
-      case "delayTimeModDepth":
-      case "delayLazynessModDepth":
-      case "delayInputModDepth":
-      case "grainLengthModIndex":
-      case "grainDenseModIndex":
-      case "playSpeedModIndex":
-      case "delayTimeModIndex":
-      case "delayLazynessModIndex":
-      case "delayInputModIndex":
-        this._synth[event.data.cmd] = event.data.val;
-        break;
-      case "lfoRate":
-        this._synth.setModFreq(event.data.val.index, event.data.val.val);
-        break;
-      case "setWaveform":
-        this._synth.setModType(event.data.val.index, event.data.val.waveform);
-        break;
-      case "setLoopStart":
-        this._synth.setLoopStart(event.data.val);
-        break;
-      case "setLoopLength":
-        this._synth.setLoopLength(event.data.val);
+        this._capture.stopPlaying(event.data.val);
         break;
       default:
         console.log(event.data);

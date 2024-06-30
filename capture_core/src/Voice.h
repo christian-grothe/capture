@@ -41,7 +41,7 @@ public:
 private:
   Synth *synth;
 
-  static constexpr int GRAIN_NUMS = 32;
+  static constexpr int GRAIN_NUMS = 8;
   Grain grains[GRAIN_NUMS];
 
   Envelope env;
@@ -55,8 +55,8 @@ private:
   float loopBufferSize;
   bool isPlaying;
   float pitch;
-  float grainTriggerModDepth{3};
-  float grainLengthModDepth{3};
+  float grainTriggerModDepth;
+  float grainLengthModDepth;
 
   float grainTriggerRate; // amount of triggers per second
   float grainTriggerInc;  // counts from 0 to grainTriggerRate

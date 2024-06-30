@@ -5,7 +5,9 @@ type GrainCommands =
   | "setGrainLength"
   | "setGrainPosition"
   | "setGrainSize"
-  | "setPlaySpeed";
+  | "setPlaySpeed"
+  | "setGain";
+
 
 type DelayCommands =
   | "setDelaytime"
@@ -23,13 +25,15 @@ export type ModCommands =
   | "delayTimeModDepth"
   | "delayLazynessModDepth"
   | "delayInputModDepth"
+  | "gainModDepth"
   | "grainDenseModIndex"
   | "grainLengthModIndex"
   | "playSpeedModIndex"
   | "delayTimeModIndex"
   | "delayLazynessModIndex"
   | "delayInputModIndex"
-  | "setModFreq";
+  | "setModFreq"
+  | "gainModIndex";
 
 export type Commands =
   | "setLoopStart"
