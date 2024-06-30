@@ -74,6 +74,6 @@ public:
   uint8_t delayInputModIndex{0};
 
 private:
-  static constexpr int VOICE_NUM = 16;
+  static constexpr int VOICE_NUM = 32;
   Voice voices[VOICE_NUM];
 };

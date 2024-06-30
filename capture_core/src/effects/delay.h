@@ -4,12 +4,25 @@
 
 class ModulationMixer;
 
+struct OnePole {
+  float z1{0.0f};
+  float alpha{0.45};
+  float next(float input) {
+    z1 = z1 + alpha * (input - z1);
+    return z1;
+  }
+  void setAlpha(float alpha_) { alpha = alpha_; }
+};
+
 class Delay {
 public:
   void init(ModulationMixer *modMixer_);
 
   Utils::Signal nextSample();
   Utils::Signal render(Utils::Signal input);
+
+  OnePole filterL;
+  OnePole filterR;
 
   void write(Utils::Signal input);
   void setSize(int bufferSize_, float sampleRate_);
@@ -18,11 +31,14 @@ public:
   void setInputGain(float inputGain_);
   void setOutputGain(float outputGain_);
   void setInterpolationTime(float interpolationTime_);
+  void setDelayColor(float color_);
 
-  float delayInputModIndex;
-  float delayInputModDepth;
-  float delayTimeModIndex;
-  float delayTimeModDepth;
+  int delayInputModIndex{0};
+  int delayTimeModIndex{0};
+  int delayOutputModIndex{0};
+  float delayInputModDepth{0.0f};
+  float delayOutputModDepth{0.0f};
+  float delayTimeModDepth{0.0f};
 
 private:
   int writePos{0};

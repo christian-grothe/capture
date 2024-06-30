@@ -70,8 +70,8 @@ const ControllSection = ({ index }: Props) => {
               return copy;
             });
             sendMessage({
-              command: "setGrainLength",
-              data: { value: val, index },
+              command: "setGrainLengthModIndex",
+              data: { index, value: val - 1 },
             });
           },
           valueModDepth: lengthMod[index].modDepth,
@@ -81,7 +81,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modDepth = val;
               return copy;
             });
-            sendMessage("grainLengthModDepth", { index, val });
+            sendMessage({
+              command: "setGrainLengthModDepth",
+              data: { index, value: val },
+            });
           },
         }}
       />
@@ -107,7 +110,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modIndex = val;
               return copy;
             });
-            sendMessage("grainDenseModIndex", { index, val });
+            sendMessage({
+              command: "setGrainDenseModIndex",
+              data: { index, value: val - 1 },
+            });
           },
           valueModDepth: densityMod[index].modDepth,
           callbackModDepth: (val: number) => {
@@ -116,7 +122,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modDepth = val;
               return copy;
             });
-            sendMessage("grainDenseModDepth", { index, val });
+            sendMessage({
+              command: "setGrainDenseModDepth",
+              data: { index, value: val },
+            });
           },
         }}
       />
@@ -144,7 +153,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modIndex = val;
               return copy;
             });
-            sendMessage("playSpeedModIndex", { index, val });
+            sendMessage({
+              command: "setPlaySpeedModIndex",
+              data: { index, value: val - 1 },
+            });
           },
           valueModDepth: speedMod[index].modDepth,
           callbackModDepth: (val: number) => {
@@ -153,7 +165,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modDepth = val;
               return copy;
             });
-            sendMessage("playSpeedModDepth", { index, val });
+            sendMessage({
+              command: "setPlaySpeedModDepth",
+              data: { index, value: val },
+            });
           },
         }}
       />
@@ -209,7 +224,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modIndex = val;
               return copy;
             });
-            sendMessage("gainModIndex", { index, val });
+            sendMessage({
+              command: "setGainModIndex",
+              data: { index, value: val - 1 },
+            });
           },
           valueModDepth: gainMod[index].modDepth,
           callbackModDepth: (val: number) => {
@@ -218,7 +236,10 @@ const ControllSection = ({ index }: Props) => {
               copy[index].modDepth = val;
               return copy;
             });
-            sendMessage("gainModDepth", { index, val });
+            sendMessage({
+              command: "setGainModDepth",
+              data: { index, value: val },
+            });
           },
         }}
       />

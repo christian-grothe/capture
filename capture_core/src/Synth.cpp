@@ -62,29 +62,31 @@ void Synth::setGain(float gain_) { gain = gain_; }
 void Synth::record() { isRecording = true; }
 
 Utils::Signal Synth::render(float inputSample) {
-  Utils::Signal output;
   if (isRecording) {
     auto writePtr = loopBuffer.getWritePtr();
     writePtr[writePos] = inputSample;
     writePos++;
     if (writePos > loopBuffer.getNumSamples()) {
-      std::cout << "FINISH" << std::endl;
       writePos = 0;
       isRecording = false;
     }
   }
 
+  Utils::Signal output;
   for (int voice = 0; voice < VOICE_NUM; voice++) {
     if (voices[voice].getIsPlaying()) {
       output += voices[voice].render();
     }
   }
-  output *= gain;
+  float gainInc =
+      modMixer->getModulationIncrement(gainModIndex, gainModDepth, gain, 1.0f);
+  output *= (gain + gainInc);
   return output;
 }
 
 void Synth::init(int totalChannelNum, int bufferSize, float sampleRate_,
                  ModulationMixer *modMixer_) {
+  modMixer = modMixer_;
   writePos = 0.0f;
   playbackDir = PlaybackDir::Normal;
   grainDir = PlaybackDir::Normal;

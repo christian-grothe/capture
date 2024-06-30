@@ -13,6 +13,9 @@ public:
   void startPlaying(int midiNote);
   void stopPlaying(int midiNote);
 
+  void setAttack(float attack);
+  void setRelease(float release);
+
   void setGrainLength(float grainLength, int index);
   void setPlaySpeed(float playSpeed, int index);
   void setDensity(float density, int index);
@@ -24,22 +27,24 @@ public:
   void setDelayInterpolationTime(float interpolationTime);
   void setDelayInputGain(float inputGain);
   void setDelayOutputGain(float outputGain);
+  void setDelayColor(float color);
+
+  void setDelayInputGainModDepth(float delayInputModDepth);
+  void setDelayOutputGainModDepth(float delayOutputModDepth);
+  void setDelaytimeModDepth(float delaytimeModDepth);
+  void setDelayInputGainModIndex(int delayInputModIndex);
+  void setDelayOutputGainModIndex(int delayOutputModIndex);
+  void setDelaytimeModIndex(int delaytimeModIndex);
 
   void setGrainLengthModDepth(float grainLengthModDepth, int index);
   void setGrainDenseModDepth(float densityModDepth, int index);
   void setPlaySpeedModDepth(float playSpeedModDepth, int index);
   void setGainModDepth(float gainModDepth, int index);
-  void setDelayTimeModDepth(float delayTimeModDepth);
-  void setDelayLazynessModDepth(float delayLazynessModDepth);
-  void setDelayInputModDepth(float delayInputModDepth);
 
   void setGrainLengthModIndex(float grainLengthModIndex, int index);
-  void setDenseModIndex(float densityModIndex, int index);
+  void setGrainDenseModIndex(float densityModIndex, int index);
   void setPlaySpeedModIndex(float playSpeedModIndex, int index);
   void setGainModIndex(float gainModIndex, int index);
-  void setDelayTimeModIndex(float delayTimeModDepth);
-  void setDelayLazynessModIndex(float delayLazynessModIndex);
-  void setDelayInputModIndex(float delayInputModIndex);
 
   void setLoopStart(float loopStart, int index);
   void setLoopLength(float loopLength, int index);

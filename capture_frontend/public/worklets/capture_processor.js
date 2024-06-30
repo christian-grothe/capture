@@ -179,19 +179,13 @@ export class CaptureProcessor extends AudioWorkletProcessor {
         );
         break;
       case "setDelayTimeModDepth":
-        this._capture.setDelayTimeModDepth(
-          event.data.data.value,
-        );
+        this._capture.setDelayTimeModDepth(event.data.data.value);
         break;
       case "setDelayLazynessModDepth":
-        this._capture.setDelayLazynessModDepth(
-          event.data.data.value,
-        );
+        this._capture.setDelayLazynessModDepth(event.data.data.value);
         break;
       case "setDelayInputModDepth":
-        this._capture.setDelayInputModDepth(
-          event.data.data.value,
-        );
+        this._capture.setDelayInputModDepth(event.data.data.value);
         break;
 
       case "setGrainLengthModIndex":
@@ -219,21 +213,69 @@ export class CaptureProcessor extends AudioWorkletProcessor {
         );
         break;
       case "setDelayTimeModIndex":
-        this._capture.setDelayTimeModIndex(
-          event.data.data.value,
-        );
+        this._capture.setDelayTimeModIndex(event.data.data.value);
         break;
       case "setDelayLazynessModIndex":
-        this._capture.setDelayLazynessModIndex(
-          event.data.data.value,
-        );
+        this._capture.setDelayLazynessModIndex(event.data.data.value);
         break;
       case "setDelayInputModIndex":
-        this._capture.setDelayInputModIndex(
-          event.data.data.value,
+        this._capture.setDelayInputModIndex(event.data.data.value);
+        break;
+      case "setModFreq":
+        this._capture.setModFreq(event.data.data.index, event.data.data.value);
+        break;
+      case "setModType":
+        this._capture.setModType(event.data.data.index, event.data.data.value);
+        break;
+      case "setModDepth":
+        this._capture.setMixDepth(
+          event.data.data.mixIndex,
+          event.data.data.modIndex,
+          event.data.data.depth,
         );
         break;
-
+      case "setDelaytime":
+        this._capture.setDelaytime(event.data.data.value);
+        break;
+      case "setDelayFeedback":
+        this._capture.setDelayFeedback(event.data.data.value);
+        break;
+      case "setDelayInterpolationTime":
+        this._capture.setDelayInterpolationTime(event.data.data.value);
+        break;
+      case "setDelayInputGain":
+        this._capture.setDelayInputGain(event.data.data.value);
+        break;
+      case "setDelayOutputGain":
+        this._capture.setDelayOutputGain(event.data.data.value);
+        break;
+      case "setDelayColor":
+        this._capture.setDelayColor(event.data.data.value);
+        break;
+      case "setDelaytimeModDepth":
+        this._capture.setDelaytimeModDepth(event.data.data.value);
+        break;
+      case "setDelaytimeModIndex":
+        this._capture.setDelaytimeModIndex(event.data.data.value);
+        break;
+      case "setDelayInputGainModDepth":
+        this._capture.setDelayInputGainModDepth(event.data.data.value);
+        break;
+      case "setDelayInputGainModIndex":
+        this._capture.setDelayInputGainModIndex(event.data.data.value);
+        break;
+      case "setDelayOutputGainModDepth":
+        this._capture.setDelayOutputGainModDepth(event.data.data.value);
+        break;
+      case "setDelayOutputGainModIndex":
+        this._capture.setDelayOutputGainModIndex(event.data.data.value);
+        break;
+      case "setAttack":
+        this._capture.setAttack(event.data.data.value);
+        break;
+      case "setRelease":
+        this._capture.setRelease(event.data.data.value);
+        break;
       default:
         console.log(event.data);
         break;

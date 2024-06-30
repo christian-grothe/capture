@@ -7,7 +7,7 @@ import { useAppStore } from "../../store/useAppStore";
 
 const LfoController = () => {
   const sendMessage = useAppStore((state) => state.sendMessage);
-  const [vals] = useState([0, 0, 0, 0]);
+  const [vals, setVals] = useState([0, 0, 0, 0]);
 
   const [currentMix, setCurrentMix] = useState(0);
   const [mixes, setMixes] = useState([
@@ -34,18 +34,16 @@ const LfoController = () => {
     const mix = mixes[currentMix];
     mix[index] = val;
     setMixes([...mixes]);
-    sendMessage({ command: "setMixDepth", data: { mixIndex: currentMix, modIndex: index, depth: val } });
+    sendMessage({
+      command: "setModDepth",
+      data: { mixIndex: currentMix, modIndex: index, depth: val },
+    });
   };
 
   return (
     <div className={"container grow"}>
       <div className={styles.top}>
-        <NumberSelect
-          min={1}
-          max={4}
-          initVal={1}
-          callback={setCurrentMixCb}
-        />
+        <NumberSelect min={1} max={4} initVal={1} callback={setCurrentMixCb} />
         <span>LFO Mixer</span>
       </div>
       <div className={styles.controlls}>
@@ -54,11 +52,19 @@ const LfoController = () => {
             label="A"
             unit="Hz"
             min={0.05}
-            max={10}
+            max={20}
             waveformSelect={0}
             value={vals[0]}
             callback={(val: number) => {
-              sendMessage({ command: "lfoRate", data:{ index: 0, val }});
+              setVals((prev) => {
+                const copy = [...prev];
+                copy[0] = val;
+                return copy;
+              });
+              sendMessage({
+                command: "setModFreq",
+                data: { index: 0, value: val },
+              });
             }}
           />
           <Fader index={0} setMixVal={setMix} initVal={mixes[currentMix][0]} />
@@ -68,11 +74,19 @@ const LfoController = () => {
             label="B"
             unit="Hz"
             min={0.05}
-            max={10}
+            max={20}
             waveformSelect={1}
             value={vals[1]}
             callback={(val: number) => {
-              sendMessage({ command: "lfoRate", data:{ index: 1, val }});
+              setVals((prev) => {
+                const copy = [...prev];
+                copy[1] = val;
+                return copy;
+              });
+              sendMessage({
+                command: "setModFreq",
+                data: { index: 1, value: val },
+              });
             }}
           />
           <Fader index={1} setMixVal={setMix} initVal={mixes[currentMix][1]} />
@@ -82,11 +96,19 @@ const LfoController = () => {
             label="C"
             unit="Hz"
             min={0.05}
-            max={10}
+            max={20}
             waveformSelect={2}
             value={vals[2]}
             callback={(val: number) => {
-              sendMessage({ command: "lfoRate", data:{ index: 2, val }});
+              setVals((prev) => {
+                const copy = [...prev];
+                copy[2] = val;
+                return copy;
+              });
+              sendMessage({
+                command: "setModFreq",
+                data: { index: 2, value: val },
+              });
             }}
           />
           <Fader index={2} setMixVal={setMix} initVal={mixes[currentMix][2]} />
@@ -96,11 +118,19 @@ const LfoController = () => {
             label="D"
             unit="Hz"
             min={0.05}
-            max={10}
+            max={20}
             waveformSelect={3}
             value={vals[3]}
             callback={(val: number) => {
-              sendMessage({ command: "lfoRate", data:{ index: 3, val }});
+              setVals((prev) => {
+                const copy = [...prev];
+                copy[3] = val;
+                return copy;
+              });
+              sendMessage({
+                command: "setModFreq",
+                data: { index: 3, value: val },
+              });
             }}
           />
           <Fader index={3} setMixVal={setMix} initVal={mixes[currentMix][3]} />

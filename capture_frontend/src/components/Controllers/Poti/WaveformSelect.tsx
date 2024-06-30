@@ -45,7 +45,10 @@ const WaveformSelect = ({ index }: Props) => {
 
   useEffect(() => {
     if (!hasInteraction) return;
-    sendMessage({ command: "setWaveform", data: { waveform: currentWaveform, index } });
+    sendMessage({
+      command: "setModType",
+      data: { index, value: currentWaveform },
+    });
   }, [currentWaveform]);
 
   return (

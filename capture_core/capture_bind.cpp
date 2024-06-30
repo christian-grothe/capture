@@ -55,14 +55,27 @@ EMSCRIPTEN_BINDINGS(CAPTURE_CLASS) {
       .function("setGrainDenseModDepth", &Capture::setGrainDenseModDepth)
       .function("setPlaySpeedModDepth", &Capture::setPlaySpeedModDepth)
       .function("setGainModDepth", &Capture::setGainModDepth)
-      .function("setDelayTimeModDepth", &Capture::setDelayTimeModDepth)
-      .function("setDelayLazynessModDepth", &Capture::setDelayLazynessModDepth)
-      .function("setDelayInputModDepth", &Capture::setDelayInputModDepth)
       .function("setGrainLengthModIndex", &Capture::setGrainLengthModIndex)
-      .function("setDenseModIndex", &Capture::setDenseModIndex)
+      .function("setGrainDenseModIndex", &Capture::setGrainDenseModIndex)
       .function("setPlaySpeedModIndex", &Capture::setPlaySpeedModIndex)
       .function("setGainModIndex", &Capture::setGainModIndex)
-      .function("setDelayTimeModIndex", &Capture::setDelayTimeModIndex)
-      .function("setDelayLazynessModIndex", &Capture::setDelayLazynessModIndex)
-      .function("setDelayInputModIndex", &Capture::setDelayInputModIndex);
+      .function("setDelaytime", &Capture::setDelaytime)
+      .function("setDelayFeedback", &Capture::setDelayFeedback)
+      .function("setDelayInterpolationTime",
+                &Capture::setDelayInterpolationTime)
+      .function("setDelayInputGain", &Capture::setDelayInputGain)
+      .function("setDelayOutputGain", &Capture::setDelayOutputGain)
+      .function("setDelayColor", &Capture::setDelayColor)
+      .function("setDelayInputGainModDepth",
+                &Capture::setDelayInputGainModDepth)
+      .function("setDelayOutputGainModDepth",
+                &Capture::setDelayOutputGainModDepth)
+      .function("setDelaytimeModDepth", &Capture::setDelaytimeModDepth)
+      .function("setDelayInputGainModIndex",
+                &Capture::setDelayInputGainModIndex)
+      .function("setDelayOutputGainModIndex",
+                &Capture::setDelayOutputGainModIndex)
+      .function("setDelaytimeModIndex", &Capture::setDelaytimeModIndex)
+      .function("setAttack", &Capture::setAttack)
+      .function("setRelease", &Capture::setRelease);
 };
