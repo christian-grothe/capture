@@ -51,14 +51,22 @@ export class CaptureProcessor extends AudioWorkletProcessor {
     this._heapInputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 1, 1);
     this._heapOutputBuffer = new HeapAudioBuffer(Module, NUM_FRAMES, 2, 2);
     this.port.onmessage = this.handleMessage.bind(this);
-    this.bufferToDrawSize = 128;
-    this.currentSampleSum = 0;
-    this.currentIndex = 0;
-    this.currentSample = 0;
-    this.samplesPerBar = Math.floor(
-      this.audioBufferSize / this.bufferToDrawSize,
-    );
-    this._synth.init(2, this.audioBufferSize, sampleRate);
+    this.buffersToDraw = [
+      new BufferToDraw(0, 256, (10 * sampleRate) / 256, this),
+      new BufferToDraw(1, 256, (10 * sampleRate) / 256, this),
+      new BufferToDraw(2, 256, (10 * sampleRate) / 256, this),
+      new BufferToDraw(3, 256, (10 * sampleRate) / 256, this),
+    ];
+    this._capture.init(2, this.audioBufferSize, sampleRate);
+  }
+
+  isRecording() {
+    for (let i = 0; i < 4; i++) {
+      if (this._capture.isRecording(i)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   process(inputs, outputs) {
@@ -75,20 +83,15 @@ export class CaptureProcessor extends AudioWorkletProcessor {
       input = inputL;
     }
 
-    if (this._synth.isRecording) {
-      for (let i = 0; i < input.length; i++) {
-        this.currentSampleSum += Math.abs(input[i]);
-        this.currentSample++;
-        if (this.currentSample >= this.samplesPerBar) {
-          const average = this.currentSampleSum / this.samplesPerBar;
-          this.currentIndex++;
-          this.currentSampleSum = 0;
-          this.currentSample = 0;
-          this.port.postMessage({
-            cmd: "audioData",
-            val: average,
-            index: this.currentIndex,
-          });
+    this._heapInputBuffer.getChannelData(0).set(input);
+
+    for (let i = 0; i < inputL.length; i++) {
+      const currentSample = Math.abs(input[i]);
+      for (let i = 0; i < this.buffersToDraw.length; i++) {
+        if (this._capture.isRecording(i)) {
+          this.buffersToDraw[i].addSample(currentSample);
+        } else {
+          this.buffersToDraw[i].reset();
         }
       }
     }
